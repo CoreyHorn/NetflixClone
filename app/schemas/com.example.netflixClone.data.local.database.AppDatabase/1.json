@@ -2,29 +2,47 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "aa30e1f56ac8abf616fea6d760226ba4",
+    "identityHash": "5b5971700db7d3e04a66da9f09d58a99",
     "entities": [
       {
         "tableName": "Movie",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `percentFinished` REAL NOT NULL, `isNetflix` INTEGER NOT NULL, `isTopTen` INTEGER NOT NULL, PRIMARY KEY(`title`))",
         "fields": [
           {
-            "fieldPath": "name",
-            "columnName": "name",
+            "fieldPath": "title",
+            "columnName": "title",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "uid",
-            "columnName": "uid",
+            "fieldPath": "imageUrl",
+            "columnName": "imageUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "percentFinished",
+            "columnName": "percentFinished",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isNetflix",
+            "columnName": "isNetflix",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isTopTen",
+            "columnName": "isTopTen",
             "affinity": "INTEGER",
             "notNull": true
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
-            "uid"
+            "title"
           ]
         },
         "indices": [],
@@ -34,7 +52,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'aa30e1f56ac8abf616fea6d760226ba4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5b5971700db7d3e04a66da9f09d58a99')"
     ]
   }
 }

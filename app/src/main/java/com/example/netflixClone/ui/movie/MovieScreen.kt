@@ -41,6 +41,8 @@ import androidx.lifecycle.Lifecycle.State.STARTED
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.netflixClone.ui.theme.MyApplicationTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
+import com.example.netflixClone.data.di.fakeMovies
+import com.example.netflixClone.data.local.database.Movie
 import kotlinx.coroutines.flow.collect
 
 @Composable
@@ -52,7 +54,6 @@ fun MovieScreen(modifier: Modifier = Modifier, viewModel: MovieViewModel = hiltV
         key2 = viewModel
     ) {
         lifecycle.repeatOnLifecycle(state = STARTED) {
-            Log.d("stuff", "collecting state")
             viewModel.uiState.collect { value = it }
         }
     }
@@ -68,7 +69,7 @@ fun MovieScreen(modifier: Modifier = Modifier, viewModel: MovieViewModel = hiltV
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MovieScreen(
-    items: List<String>,
+    items: List<Movie>,
     onSave: (name: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -99,7 +100,7 @@ internal fun MovieScreen(
 @Composable
 private fun DefaultPreview() {
     MyApplicationTheme {
-        MovieScreen(listOf("Compose", "Room", "Kotlin"), onSave = {})
+        MovieScreen(fakeMovies, onSave = {})
     }
 }
 
@@ -107,6 +108,6 @@ private fun DefaultPreview() {
 @Composable
 private fun PortraitPreview() {
     MyApplicationTheme {
-        MovieScreen(listOf("Compose", "Room", "Kotlin"), onSave = {})
+        MovieScreen(fakeMovies, onSave = {})
     }
 }

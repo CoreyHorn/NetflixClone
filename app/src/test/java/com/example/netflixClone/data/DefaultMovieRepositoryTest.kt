@@ -36,7 +36,7 @@ class DefaultMovieRepositoryTest {
     fun movies_newItemSaved_itemIsReturned() = runTest {
         val repository = DefaultMovieRepository(FakeMovieDao())
 
-        repository.add("Repository")
+        repository.add("Repository", "testUrl")
 
         assertEquals(repository.movies.first().size, 1)
     }

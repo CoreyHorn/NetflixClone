@@ -21,6 +21,8 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.netflixClone.data.local.database.Movie
+import com.example.netflixClone.data.remote.NetworkMovie
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -44,8 +46,12 @@ class MovieScreenTest {
 
     @Test
     fun firstItem_exists() {
-        composeTestRule.onNodeWithText(FAKE_DATA.first()).assertExists().performClick()
+        composeTestRule.onNodeWithText(FAKE_DATA.first().title, substring = true).assertExists()
     }
 }
 
-private val FAKE_DATA = listOf("Compose", "Room", "Kotlin")
+private val FAKE_DATA = listOf(
+    Movie("Star Trek Picard", "https://image.tmdb.org/t/p/original/nIlAKIrLKxOeoEnc0Urb65yNCp.jpg"),
+    Movie("Ant-Man and the Wasp: Quantumania", "https://image.tmdb.org/t/p/original/ngl2FKBlU4fhbdsrtdom9LVLBXw.jpg"),
+    Movie("Carnival Row", "https://image.tmdb.org/t/p/original/jyhxT10e2z9IDsKoIQDKhyxSQJt.jpg")
+)

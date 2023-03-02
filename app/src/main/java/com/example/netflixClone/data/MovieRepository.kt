@@ -23,19 +23,19 @@ import com.example.netflixClone.data.local.database.MovieDao
 import javax.inject.Inject
 
 interface MovieRepository {
-    val movies: Flow<List<String>>
+    val movies: Flow<List<Movie>>
 
-    suspend fun add(name: String)
+    suspend fun add(title: String, imageUrl: String)
 }
 
 class DefaultMovieRepository @Inject constructor(
     private val movieDao: MovieDao
 ) : MovieRepository {
 
-    override val movies: Flow<List<String>> =
-        movieDao.getMovies().map { items -> items.map { it.name } }
+    override val movies: Flow<List<Movie>> =
+        movieDao.getMovies()
 
-    override suspend fun add(name: String) {
-        movieDao.insertMovie(Movie(name = name))
+    override suspend fun add(title: String, imageUrl: String) {
+        movieDao.insertMovie(Movie(title, imageUrl))
     }
 }

@@ -16,7 +16,6 @@
 
 package com.example.netflixClone.ui.movie
 
-
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -25,6 +24,9 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import com.example.netflixClone.data.MovieRepository
+import com.example.netflixClone.data.local.database.Movie
+import com.example.netflixClone.data.remote.FakeMovieService
+import com.example.netflixClone.data.remote.TestMovieService
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -35,25 +37,25 @@ import com.example.netflixClone.data.MovieRepository
 class MovieViewModelTest {
     @Test
     fun uiState_initiallyLoading() = runTest {
-        val viewModel = MovieViewModel(FakeMovieRepository())
+        val viewModel = MovieViewModel(FakeMovieRepository(), TestMovieService())
         assertEquals(viewModel.uiState.first(), MovieUiState.Loading)
     }
 
     @Test
     fun uiState_onItemSaved_isDisplayed() = runTest {
-        val viewModel = MovieViewModel(FakeMovieRepository())
+        val viewModel = MovieViewModel(FakeMovieRepository(), TestMovieService())
         assertEquals(viewModel.uiState.first(), MovieUiState.Loading)
     }
 }
 
 private class FakeMovieRepository : MovieRepository {
 
-    private val data = mutableListOf<String>()
+    private val data = mutableListOf<Movie>()
 
-    override val movies: Flow<List<String>>
+    override val movies: Flow<List<Movie>>
         get() = flow { emit(data.toList()) }
 
-    override suspend fun add(name: String) {
-        data.add(0, name)
+    override suspend fun add(title: String, imageUrl: String) {
+        data.add(Movie(title, imageUrl))
     }
 }

@@ -25,15 +25,17 @@ import kotlinx.coroutines.flow.Flow
 
 @Entity
 data class Movie(
-    val name: String
-) {
-    @PrimaryKey(autoGenerate = true)
-    var uid: Int = 0
-}
+    @PrimaryKey
+    val title: String,
+    val imageUrl: String,
+    val percentFinished: Float = 0f,
+    val isNetflix: Boolean = false,
+    val isTopTen: Boolean = false
+)
 
 @Dao
 interface MovieDao {
-    @Query("SELECT * FROM movie ORDER BY uid DESC LIMIT 10")
+    @Query("SELECT * FROM movie ORDER BY title DESC LIMIT 10")
     fun getMovies(): Flow<List<Movie>>
 
     @Insert
