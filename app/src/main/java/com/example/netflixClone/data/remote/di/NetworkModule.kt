@@ -1,9 +1,9 @@
-package com.example.netflixClone.data.di
+package com.example.netflixClone.data.remote.di
 
 import com.example.netflixClone.data.local.database.MovieDao
 import com.example.netflixClone.data.local.di.DatabaseModule
-import com.example.netflixClone.data.remote.FakeMovieService
-import com.example.netflixClone.data.remote.MovieApi
+import com.example.netflixClone.data.remote.network.FakeMovieService
+import com.example.netflixClone.data.remote.network.MovieApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

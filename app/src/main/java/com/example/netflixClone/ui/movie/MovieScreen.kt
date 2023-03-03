@@ -17,21 +17,11 @@
 package com.example.netflixClone.ui.movie
 
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,26 +29,28 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle.State.STARTED
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.netflixClone.ui.theme.MyApplicationTheme
 import com.example.netflixClone.data.di.fakeMovies
 import com.example.netflixClone.data.local.database.Movie
-import kotlinx.coroutines.flow.collect
+import com.example.netflixClone.ui.theme.MyApplicationTheme
 
 @Composable
 fun MovieScreen(modifier: Modifier = Modifier, viewModel: MovieViewModel = hiltViewModel()) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val items by produceState<MovieUiState>(
+    val state by produceState<MovieUiState>(
         initialValue = MovieUiState.Loading,
         key1 = lifecycle,
         key2 = viewModel
     ) {
         lifecycle.repeatOnLifecycle(state = STARTED) {
-            viewModel.uiState.collect { value = it }
+            viewModel.uiState.collect {
+                Log.d("stuff", it.toString())
+                value = it
+            }
         }
     }
-    if (items is MovieUiState.Success) {
+    if (state is MovieUiState.Success) {
         MovieScreen(
-            items = (items as MovieUiState.Success).data,
+            items = (state as MovieUiState.Success).data,
             onSave = viewModel::addMovie,
             modifier = modifier
         )
@@ -68,13 +60,15 @@ fun MovieScreen(modifier: Modifier = Modifier, viewModel: MovieViewModel = hiltV
 @Composable
 internal fun MovieScreen(
     items: List<Movie>,
-    onSave: (name: String) -> Unit,
+    onSave: (title: String, imageUrl: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
         var nameMovie by remember { mutableStateOf("Compose") }
         Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 24.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             TextField(
@@ -82,7 +76,7 @@ internal fun MovieScreen(
                 onValueChange = { nameMovie = it }
             )
 
-            Button(modifier = Modifier.width(96.dp), onClick = { onSave(nameMovie) }) {
+            Button(modifier = Modifier.width(96.dp), onClick = { onSave(nameMovie, "testURL") }) {
                 Text("Save")
             }
         }
@@ -98,7 +92,7 @@ internal fun MovieScreen(
 @Composable
 private fun DefaultPreview() {
     MyApplicationTheme {
-        MovieScreen(fakeMovies, onSave = {})
+        MovieScreen(fakeMovies, onSave = { title, url ->  })
     }
 }
 
@@ -106,6 +100,6 @@ private fun DefaultPreview() {
 @Composable
 private fun PortraitPreview() {
     MyApplicationTheme {
-        MovieScreen(fakeMovies, onSave = {})
+        MovieScreen(fakeMovies, onSave = { title, url ->  })
     }
 }

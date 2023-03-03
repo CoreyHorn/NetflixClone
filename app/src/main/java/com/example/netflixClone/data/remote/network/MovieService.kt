@@ -1,4 +1,4 @@
-package com.example.netflixClone.data.remote
+package com.example.netflixClone.data.remote.network
 
 import com.example.netflixClone.data.local.database.MovieDao
 import retrofit2.Response

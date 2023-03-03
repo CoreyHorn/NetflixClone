@@ -23,7 +23,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MainView(statusBarHeight: MutableState<Int>) {
+@Preview
+fun MainView(statusBarHeight: MutableState<Int> = mutableStateOf(107)) {
     val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     var currentlySelectedMovie by remember { mutableStateOf(fakeMovies.first()) }
 

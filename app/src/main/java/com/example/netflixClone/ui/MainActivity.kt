@@ -40,6 +40,7 @@ class MainActivity : ComponentActivity() {
     /**
      * Stores the status bar height. Necessary because we are drawing under the status bar
      * but want the AppBar directly below where the status bar normally ends.
+     * TODO: maybe this can be handled in Theme.kt
      */
     private var statusBarHeight: MutableState<Int> = mutableStateOf(0)
 
