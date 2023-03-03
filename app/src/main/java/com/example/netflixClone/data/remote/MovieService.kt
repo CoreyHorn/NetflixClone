@@ -14,7 +14,7 @@ interface MovieApi{
  * Services can be a good place for:
  * - modifying the data or return type visible to the viewModel
  * - global storing of data to a local cache
- * - faking results for testing
+ * - mocking results for testing
  */
 class FakeMovieService @Inject constructor(val movieDao: MovieDao): MovieApi {
     override suspend fun getMovies(): Response<List<NetworkMovie>> {

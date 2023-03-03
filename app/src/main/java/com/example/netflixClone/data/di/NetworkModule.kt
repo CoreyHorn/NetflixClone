@@ -1,9 +1,9 @@
-package com.example.netflixClone.data.remote
+package com.example.netflixClone.data.di
 
 import com.example.netflixClone.data.local.database.MovieDao
 import com.example.netflixClone.data.local.di.DatabaseModule
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import com.example.netflixClone.data.remote.FakeMovieService
+import com.example.netflixClone.data.remote.MovieApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 
 /**
- * Groups and provides APIs by their Base URL and Serialization properties.
+ * Groups and provides APIs by their Base URL and (ideally) Serialization properties.
  */
 @Module(includes = [DatabaseModule::class])
 @InstallIn(SingletonComponent::class)
