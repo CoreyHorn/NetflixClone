@@ -18,21 +18,14 @@ package com.example.netflixClone.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.netflixClone.ui.main.MainView
 
 @Composable
-fun MainNavigation() {
+fun MainNavigation(statusBarHeight: MutableState<Int>) {
     val navController = rememberNavController()
-    /**
-     * Stores the status bar height. Necessary because we are drawing under the status bar
-     * but want the AppBar directly below where the status bar normally ends.
-     */
-    val statusBarHeight: MutableState<Int> = remember { mutableStateOf(0) }
 
     NavHost(navController = navController, startDestination = "main") {
         composable("main") { MainView(statusBarHeight = statusBarHeight) }

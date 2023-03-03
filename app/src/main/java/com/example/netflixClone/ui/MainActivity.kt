@@ -23,8 +23,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -43,12 +43,11 @@ class MainActivity : ComponentActivity() {
      */
     private var statusBarHeight: MutableState<Int> = mutableStateOf(0)
 
-    @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                MainNavigation()
+                MainNavigation(statusBarHeight)
             }
         }
 
