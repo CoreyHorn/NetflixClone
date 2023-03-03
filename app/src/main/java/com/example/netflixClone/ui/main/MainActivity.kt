@@ -48,8 +48,8 @@ import androidx.core.view.updateLayoutParams
 import com.example.netflixClone.R
 import com.example.netflixClone.data.di.fakeMovies
 import com.example.netflixClone.data.local.database.Movie
-import dagger.hilt.android.AndroidEntryPoint
 import com.example.netflixClone.ui.theme.MyApplicationTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -71,7 +71,13 @@ class MainActivity : ComponentActivity() {
 
                 val coroutineScope = rememberCoroutineScope()
 
-                ModalBottomSheetLayout(sheetState = bottomSheetState, sheetContent = { MovieDetailBottomSheet(currentlySelectedMovie) }) {
+                ModalBottomSheetLayout(sheetState = bottomSheetState, sheetContent = {
+                    MovieDetailBottomSheet(currentlySelectedMovie) {
+                        coroutineScope.launch {
+                            bottomSheetState.hide()
+                        }
+                    }
+                }) {
                     RootView(statusBarHeight) {
                         val isNewMovie = it != currentlySelectedMovie
                         currentlySelectedMovie = it
@@ -87,8 +93,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-        val systemUiController =
 
         configureSystemBars(this, window.decorView.findViewById(android.R.id.content))
     }

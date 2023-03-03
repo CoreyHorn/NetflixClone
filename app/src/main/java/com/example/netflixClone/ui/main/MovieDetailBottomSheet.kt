@@ -2,6 +2,7 @@ package com.example.netflixClone.ui.main
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -22,7 +23,7 @@ import com.example.netflixClone.data.local.database.Movie
 
 @Preview
 @Composable
-fun MovieDetailBottomSheet(movie: Movie = fakeMovies.first()) {
+fun MovieDetailBottomSheet(movie: Movie = fakeMovies.first(), onClose: () -> Unit = {}) {
     Surface(
         color = colorResource(id = R.color.bottom_sheet_background), modifier = Modifier.fillMaxWidth()
     ) {
@@ -37,7 +38,8 @@ fun MovieDetailBottomSheet(movie: Movie = fakeMovies.first()) {
                 Column(
                     Modifier
                         .weight(1f)
-                        .padding(start = 8.dp)) {
+                        .padding(start = 8.dp)
+                ) {
                     Text(text = movie.title, fontSize = 24.sp, maxLines = 2, color = Color.White)
                     Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
                         ProvideTextStyle(
@@ -49,12 +51,13 @@ fun MovieDetailBottomSheet(movie: Movie = fakeMovies.first()) {
                         }
                     }
                     Text(
-                        text = "This docuseries traces the history of classic video games, featuring insights from the innovators who brought " + "these worlds and characters to life.",
+                        text = "This docuseries traces the history of classic video games, featuring insights from the innovators who brought these" +
+                                " worlds and characters to life.",
                         color = Color.White,
                         fontSize = 14.sp
                     )
                 }
-                CircularImageButton(R.drawable.ic_baseline_close_24, 24.dp,"Close")
+                CircularImageButton(R.drawable.ic_baseline_close_24, 24.dp, "Close", onClose)
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier
@@ -67,11 +70,11 @@ fun MovieDetailBottomSheet(movie: Movie = fakeMovies.first()) {
                 ImageTextButton(id = R.drawable.ic_outline_share_24, text = "Share", size = 42.dp)
             }
             Divider(color = colorResource(id = R.color.bottom_sheet_divider))
-            Row(
-                verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 12.dp)
-            ) {
+                    .clickable { }) {
                 Icon(
                     painter = painterResource(R.drawable.ic_outline_info_24), contentDescription = "Details & More", tint = Color.White
                 )
@@ -91,10 +94,10 @@ fun MovieDetailBottomSheet(movie: Movie = fakeMovies.first()) {
 @Preview
 @Composable
 private fun CircularImageButton(
-    @DrawableRes id: Int = R.drawable.ic_baseline_add_24, size: Dp = 50.dp, contentDescription: String = "Test"
+    @DrawableRes id: Int = R.drawable.ic_baseline_add_24, size: Dp = 50.dp, contentDescription: String = "Test", onClick: () -> Unit = {}
 ) {
     Button(
-        onClick = {},
+        onClick = onClick,
         colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.bottom_sheet_button_background)),
         shape = CircleShape,
         contentPadding = PaddingValues(0.dp),
