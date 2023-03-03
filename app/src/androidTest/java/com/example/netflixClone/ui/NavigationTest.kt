@@ -23,6 +23,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
 import com.example.netflixClone.data.di.fakeMovies
+import com.example.netflixClone.ui.main.MainActivity
 
 @HiltAndroidTest
 class NavigationTest {

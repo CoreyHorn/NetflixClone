@@ -23,4 +23,13 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="transparent">#00FFFFFF</color>
+
+    <color name="bottom_bar_gray">#121212</color>
+
+    <color name="bottom_sheet_background">#303030</color>
+    <color name="bottom_sheet_button_background">#3e3e3e</color>
+    <color name="bottom_sheet_button_text">#969696</color>
+    <color name="bottom_sheet_divider">#969696</color>
 </resources>

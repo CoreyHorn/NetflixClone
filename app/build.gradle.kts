@@ -107,12 +107,13 @@ dependencies {
     // Compose
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material)
 
     // Network
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson.converter)
     implementation(libs.okhttp3.logging.interceptor)
+    implementation(libs.koil.compose)
 
     // Tooling
     debugImplementation(libs.androidx.compose.ui.tooling)
