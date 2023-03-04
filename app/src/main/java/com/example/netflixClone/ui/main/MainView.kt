@@ -27,7 +27,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MainView(viewModel: MainViewModel = hiltViewModel(), statusBarHeight: MutableState<Int> = mutableStateOf(107)) {
+fun MainView(
+    viewModel: MainViewModel = hiltViewModel(),
+    statusBarHeight: MutableState<Int> = mutableStateOf(107)
+) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val state by produceState<MainState>(
         initialValue = MainState.Loading,
@@ -42,9 +45,8 @@ fun MainView(viewModel: MainViewModel = hiltViewModel(), statusBarHeight: Mutabl
     }
 
 
-
-
-    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val bottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     var currentlySelectedMovie by remember { mutableStateOf(fakeMovies.first()) }
 
     val coroutineScope = rememberCoroutineScope()
@@ -92,7 +94,7 @@ private fun ContentView(topPadding: MutableState<Int>, onMovieClick: (Movie) -> 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun HorizontalMovieList(movies: List<Movie> = fakeMovies, onMovieClick: (Movie) -> Unit = {}) {
-    LazyRow() {
+    LazyRow {
         items(movies.size) { index ->
             MovieCard(movies[index], onMovieClick)
         }
@@ -104,7 +106,11 @@ fun HorizontalMovieList(movies: List<Movie> = fakeMovies, onMovieClick: (Movie) 
 @Composable
 fun MovieListTitle(text: String = "Popular on Netflix") {
     Text(
-        text, fontSize = 17.sp, fontWeight = FontWeight.ExtraBold, color = Color.White, modifier = Modifier.padding(8.dp)
+        text,
+        fontSize = 17.sp,
+        fontWeight = FontWeight.ExtraBold,
+        color = Color.White,
+        modifier = Modifier.padding(8.dp)
     )
 }
 

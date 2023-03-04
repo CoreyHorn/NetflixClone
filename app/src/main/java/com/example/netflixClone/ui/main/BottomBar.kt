@@ -22,7 +22,7 @@ import com.example.netflixClone.R
 @Composable
 fun BottomBar(modifier: Modifier = Modifier) {
     Surface(color = colorResource(id = R.color.bottom_bar_gray), modifier = modifier) {
-        Column() {
+        Column {
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.Top,
@@ -32,11 +32,21 @@ fun BottomBar(modifier: Modifier = Modifier) {
                     .padding(top = 12.dp, bottom = 10.dp)
             ) {
                 ProvideTextStyle(value = TextStyle(fontSize = 8.sp, color = Color.Gray)) {
-                    BottomBarButton(id = R.drawable.ic_baseline_home_24, text = "Home", tint = Color.White)
+                    BottomBarButton(
+                        id = R.drawable.ic_baseline_home_24,
+                        text = "Home",
+                        tint = Color.White
+                    )
                     BottomBarButton(id = R.drawable.ic_outline_videogame_asset_24, text = "Games")
                     BottomBarButton(id = R.drawable.ic_outline_content_copy_24, text = "New & Hot")
-                    BottomBarButton(id = R.drawable.ic_outline_emoji_emotions_24, text = "Fast Laughs")
-                    BottomBarButton(id = R.drawable.ic_baseline_arrow_circle_down_24, text = "Downloads")
+                    BottomBarButton(
+                        id = R.drawable.ic_outline_emoji_emotions_24,
+                        text = "Fast Laughs"
+                    )
+                    BottomBarButton(
+                        id = R.drawable.ic_baseline_arrow_circle_down_24,
+                        text = "Downloads"
+                    )
                 }
             }
         }
@@ -44,11 +54,20 @@ fun BottomBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BottomBarButton(@DrawableRes id: Int, text: String, tint: Color = Color.Gray, contentDescription: String = text) {
+fun BottomBarButton(
+    @DrawableRes id: Int,
+    text: String,
+    tint: Color = Color.Gray,
+    contentDescription: String = text
+) {
     Surface(color = Color.Transparent)
     {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(painter = painterResource(id = id), contentDescription = contentDescription, tint = tint)
+            Icon(
+                painter = painterResource(id = id),
+                contentDescription = contentDescription,
+                tint = tint
+            )
             Text(text = text, color = tint)
         }
     }

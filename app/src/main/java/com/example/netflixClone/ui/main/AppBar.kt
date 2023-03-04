@@ -31,13 +31,17 @@ fun AppBar(topPadding: MutableState<Int> = mutableStateOf(107)) {
         // App Bar Rows
         Column(modifier = Modifier.padding(top = paddingDp)) {
             Row(modifier = Modifier.height(48.dp)) {
-                Image(painter = painterResource(id = R.drawable.netflix_icon),
-                    contentDescription = "Netflix", modifier = Modifier.size(48.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.netflix_icon),
+                    contentDescription = "Netflix", modifier = Modifier.size(48.dp)
+                )
 
                 // Contains action icons
-                Row(horizontalArrangement = Arrangement.End,
+                Row(
+                    horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()) {
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_baseline_cast_24),
                         contentDescription = "Chromecast",
@@ -54,14 +58,16 @@ fun AppBar(topPadding: MutableState<Int> = mutableStateOf(107)) {
             }
 
             // Netflix Filters
-            Row(horizontalArrangement = Arrangement.SpaceAround,
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier
                     .height(48.dp)
                     .padding(top = 4.dp)
-                    .fillMaxWidth()) {
+                    .fillMaxWidth()
+            ) {
                 Text(text = "TV Shows")
                 Text(text = "Movies")
-                Row() {
+                Row {
                     Text(text = "Categories")
                     Image(
                         painter = painterResource(id = R.drawable.ic_baseline_arrow_drop_down_24),

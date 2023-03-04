@@ -49,7 +49,8 @@ class DefaultMovieRepository @Inject constructor(
             if (response.isSuccessful) {
                 movieDao.getMovies().collect { localMovies ->
                     if (localMovies.isEmpty()) {
-                        response.body()?.map { it.toLocalMovie() }?.forEach { movieDao.insertMovie(it) }
+                        response.body()?.map { it.toLocalMovie() }
+                            ?.forEach { movieDao.insertMovie(it) }
                     }
                 }
             }

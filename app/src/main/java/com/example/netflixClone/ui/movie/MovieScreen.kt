@@ -90,7 +90,7 @@ internal fun MovieScreen(
 @Composable
 private fun DefaultPreview() {
     MyApplicationTheme {
-        MovieScreen(fakeMovies, onSave = { title, url ->  })
+        MovieScreen(fakeMovies, onSave = { title, url -> })
     }
 }
 
@@ -98,6 +98,6 @@ private fun DefaultPreview() {
 @Composable
 private fun PortraitPreview() {
     MyApplicationTheme {
-        MovieScreen(fakeMovies, onSave = { title, url ->  })
+        MovieScreen(fakeMovies, onSave = { title, url -> })
     }
 }

@@ -18,7 +18,11 @@ import com.example.netflixClone.data.local.database.Movie
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun MovieCard(movie: Movie = fakeMovies.first(), onMovieClick: (Movie) -> Unit = { }, startPadding: Dp = 8.dp) {
+fun MovieCard(
+    movie: Movie = fakeMovies.first(),
+    onMovieClick: (Movie) -> Unit = { },
+    startPadding: Dp = 8.dp
+) {
     AsyncImage(
         model = movie.imageUrl,
         contentDescription = "Movie Poster",

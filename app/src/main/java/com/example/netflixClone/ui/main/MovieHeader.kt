@@ -29,31 +29,27 @@ import com.example.netflixClone.R
 @Composable
 fun MovieHeader() {
     Box(modifier = Modifier.wrapContentHeight()) {
-        AsyncImage(model = "https://m.media-amazon.com/images/M/MV5BY2JhZTRlYzYtZmI1OS00NTRhLWFjNGYtNzI1ODJmNmZhZGU1XkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_Ratio1.0000_AL_.jpg",
-            contentDescription = "Lost Poster", contentScale = ContentScale.FillWidth, modifier = Modifier.fillMaxWidth())
+        AsyncImage(
+            model = "https://m.media-amazon.com/images/M/MV5BY2JhZTRlYzYtZmI1OS00NTRhLWFjNGYtNzI1ODJmNmZhZGU1XkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_Ratio1.0000_AL_.jpg",
+            contentDescription = "Lost Poster",
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier.fillMaxWidth()
+        )
         // Contains the tags and buttons at the bottom of the movie image
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.Black)
-            .align(Alignment.BottomCenter)) {
-            Row(verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()) {
-                ProvideTextStyle(value = TextStyle(fontSize = 12.sp, color = Color.White)) {
-                    Text("Explosive")
-                    CircleSeparator()
-                    Text("Exciting")
-                    CircleSeparator()
-                    Text("Action Thriller")
-                    CircleSeparator()
-                    Text("Heist Movie")
-                }
-            }
-            Row(verticalAlignment = Alignment.CenterVertically,
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.Black)
+                .align(Alignment.BottomCenter)
+        ) {
+            HeaderTags()
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(12.dp)) {
+                    .padding(12.dp)
+            ) {
 
                 TextButton(id = R.drawable.ic_baseline_add_24, "My List")
                 PlayButton()
@@ -65,11 +61,15 @@ fun MovieHeader() {
 
 @Composable()
 fun TextButton(@DrawableRes id: Int, text: String, contentDescription: String = text) {
-    Button(onClick = {}, colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)) {
+    Button(
+        onClick = {},
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)
+    ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painterResource(id = id),
-                contentDescription = contentDescription)
+                contentDescription = contentDescription
+            )
 
             Text(text = text, color = Color.White, fontSize = 8.sp)
         }
@@ -78,42 +78,59 @@ fun TextButton(@DrawableRes id: Int, text: String, contentDescription: String = 
 
 @Composable()
 fun PlayButton() {
-    Button(onClick = {}, colors = ButtonDefaults.buttonColors(backgroundColor = Color.White), contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top
-    = 0
-        .dp)) {
+    Button(
+        onClick = {},
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+        contentPadding = PaddingValues(
+            start = 12.dp, end = 12.dp, top
+            = 0
+                .dp
+        )
+    ) {
         Image(
             painterResource(id = R.drawable.ic_baseline_play_arrow_24),
-            contentDescription ="Play button icon",
-            colorFilter = ColorFilter.tint(Color.Black))
-        Text(text = "Play", fontSize = 14.sp, modifier = Modifier.padding(start = 4.dp), color = Color.Black, fontWeight = FontWeight.ExtraBold)
+            contentDescription = "Play button icon",
+            colorFilter = ColorFilter.tint(Color.Black)
+        )
+        Text(
+            text = "Play",
+            fontSize = 14.sp,
+            modifier = Modifier.padding(start = 4.dp),
+            color = Color.Black,
+            fontWeight = FontWeight.ExtraBold
+        )
     }
 }
 
 @Preview
 @Composable
-fun HeaderSummary() {
+fun HeaderTags() {
     // Tags
-    Row(verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center) {
-        ProvideTextStyle(value = TextStyle(fontSize = 8.sp, color = Color.White)) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        ProvideTextStyle(value = TextStyle(fontSize = 12.sp, color = Color.White)) {
             Text("Explosive")
             CircleSeparator()
             Text("Exciting")
             CircleSeparator()
             Text("Action Thriller")
             CircleSeparator()
-            Text("Heist")
+            Text("Heist Movie")
         }
-
     }
 }
 
 @Preview
 @Composable
 fun CircleSeparator() {
-    Box(modifier = Modifier
-        .padding(8.dp)
-        .size(8.dp)
-        .clip(CircleShape)
-        .background(Color.Gray))
+    Box(
+        modifier = Modifier
+            .padding(8.dp)
+            .size(8.dp)
+            .clip(CircleShape)
+            .background(Color.Gray)
+    )
 }

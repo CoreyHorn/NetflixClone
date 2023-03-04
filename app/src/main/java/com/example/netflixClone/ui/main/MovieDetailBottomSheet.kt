@@ -25,7 +25,8 @@ import com.example.netflixClone.data.local.database.Movie
 @Composable
 fun MovieDetailBottomSheet(movie: Movie = fakeMovies.first(), onClose: () -> Unit = {}) {
     Surface(
-        color = colorResource(id = R.color.bottom_sheet_background), modifier = Modifier.fillMaxWidth()
+        color = colorResource(id = R.color.bottom_sheet_background),
+        modifier = Modifier.fillMaxWidth()
     ) {
         Column(
             Modifier
@@ -41,9 +42,15 @@ fun MovieDetailBottomSheet(movie: Movie = fakeMovies.first(), onClose: () -> Uni
                         .padding(start = 8.dp)
                 ) {
                     Text(text = movie.title, fontSize = 24.sp, maxLines = 2, color = Color.White)
-                    Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         ProvideTextStyle(
-                            value = TextStyle(fontSize = 12.sp, color = colorResource(id = R.color.bottom_sheet_button_text))
+                            value = TextStyle(
+                                fontSize = 12.sp,
+                                color = colorResource(id = R.color.bottom_sheet_button_text)
+                            )
                         ) {
                             Text(text = "2017")
                             Text(text = "TV_MA")
@@ -64,8 +71,16 @@ fun MovieDetailBottomSheet(movie: Movie = fakeMovies.first(), onClose: () -> Uni
                     .fillMaxWidth()
                     .padding(bottom = 4.dp, top = 24.dp)
             ) {
-                ImageTextButton(id = R.drawable.ic_baseline_play_arrow_24, text = "Play", size = 42.dp)
-                ImageTextButton(id = R.drawable.ic_baseline_file_download_24, text = "Download", size = 42.dp)
+                ImageTextButton(
+                    id = R.drawable.ic_baseline_play_arrow_24,
+                    text = "Play",
+                    size = 42.dp
+                )
+                ImageTextButton(
+                    id = R.drawable.ic_baseline_file_download_24,
+                    text = "Download",
+                    size = 42.dp
+                )
                 ImageTextButton(id = R.drawable.ic_baseline_add_24, text = "My List", size = 42.dp)
                 ImageTextButton(id = R.drawable.ic_outline_share_24, text = "Share", size = 42.dp)
             }
@@ -76,7 +91,9 @@ fun MovieDetailBottomSheet(movie: Movie = fakeMovies.first(), onClose: () -> Uni
                     .padding(horizontal = 8.dp, vertical = 12.dp)
                     .clickable { }) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_outline_info_24), contentDescription = "Details & More", tint = Color.White
+                    painter = painterResource(R.drawable.ic_outline_info_24),
+                    contentDescription = "Details & More",
+                    tint = Color.White
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = "Details & More", color = Color.White)
@@ -94,7 +111,10 @@ fun MovieDetailBottomSheet(movie: Movie = fakeMovies.first(), onClose: () -> Uni
 @Preview
 @Composable
 private fun CircularImageButton(
-    @DrawableRes id: Int = R.drawable.ic_baseline_add_24, size: Dp = 50.dp, contentDescription: String = "Test", onClick: () -> Unit = {}
+    @DrawableRes id: Int = R.drawable.ic_baseline_add_24,
+    size: Dp = 50.dp,
+    contentDescription: String = "Test",
+    onClick: () -> Unit = {}
 ) {
     Button(
         onClick = onClick,
@@ -113,12 +133,18 @@ private fun CircularImageButton(
 @Preview
 @Composable
 private fun ImageTextButton(
-    @DrawableRes id: Int = R.drawable.ic_baseline_add_24, text: String = "Test", size: Dp = 50.dp, contentDescription: String = text
+    @DrawableRes id: Int = R.drawable.ic_baseline_add_24,
+    text: String = "Test",
+    size: Dp = 50.dp,
+    contentDescription: String = text
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         CircularImageButton(id, size, contentDescription)
         Text(
-            text = text, color = colorResource(id = R.color.bottom_sheet_button_text), fontSize = 12.sp, modifier = Modifier.padding(top = 8.dp)
+            text = text,
+            color = colorResource(id = R.color.bottom_sheet_button_text),
+            fontSize = 12.sp,
+            modifier = Modifier.padding(top = 8.dp)
         )
     }
 }
