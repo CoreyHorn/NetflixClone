@@ -1,6 +1,5 @@
 package com.example.netflixClone.data.remote.di
 
-import com.example.netflixClone.data.local.database.MovieDao
 import com.example.netflixClone.data.local.di.DatabaseModule
 import com.example.netflixClone.data.remote.network.FakeMovieService
 import com.example.netflixClone.data.remote.network.MovieApi
@@ -40,7 +39,7 @@ class NetworkModule {
 
     @Provides
     @Named("FakeMovieService")
-    fun provideFakeMovieService(movieDao: MovieDao): MovieApi {
-        return FakeMovieService(movieDao)
+    fun provideFakeMovieService(): MovieApi {
+        return FakeMovieService()
     }
 }

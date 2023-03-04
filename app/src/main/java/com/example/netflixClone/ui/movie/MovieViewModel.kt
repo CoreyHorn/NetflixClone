@@ -20,24 +20,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.netflixClone.data.MovieRepository
 import com.example.netflixClone.data.local.database.Movie
-import com.example.netflixClone.data.remote.network.MovieApi
 import com.example.netflixClone.ui.movie.MovieUiState.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 @HiltViewModel
 class MovieViewModel @Inject constructor(
-    private val movieRepository: MovieRepository,
-    @Named("FakeMovieService") private val movieApi: MovieApi
+    private val movieRepository: MovieRepository
 ) : ViewModel() {
 
     val uiState: StateFlow<MovieUiState> = movieRepository
         .movies.map(::Success)
         .catch { Error(it) }
-        .onStart { viewModelScope.launch { movieApi.getMovies() } }
+        .onStart { viewModelScope.launch { movieRepository.fetchMovies() } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
 
     fun addMovie(title: String, imageURL: String) {

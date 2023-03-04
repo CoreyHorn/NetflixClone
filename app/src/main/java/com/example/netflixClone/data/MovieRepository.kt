@@ -16,26 +16,42 @@
 
 package com.example.netflixClone.data
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import com.example.netflixClone.data.local.database.Movie
 import com.example.netflixClone.data.local.database.MovieDao
+import com.example.netflixClone.data.remote.network.MovieApi
+import com.example.netflixClone.data.remote.network.NetworkMovie
+import com.example.netflixClone.data.remote.network.toLocalMovie
+import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 import javax.inject.Inject
 
 interface MovieRepository {
     val movies: Flow<List<Movie>>
 
     suspend fun add(title: String, imageUrl: String)
+    suspend fun fetchMovies(): Response<List<NetworkMovie>>
 }
 
 class DefaultMovieRepository @Inject constructor(
-    private val movieDao: MovieDao
+    private val movieDao: MovieDao, private val movieService: MovieApi
 ) : MovieRepository {
 
-    override val movies: Flow<List<Movie>> =
-        movieDao.getMovies()
+    override val movies: Flow<List<Movie>> = movieDao.getMovies()
 
     override suspend fun add(title: String, imageUrl: String) {
         movieDao.insertMovie(Movie(title, imageUrl))
+    }
+
+    override suspend fun fetchMovies(): Response<List<NetworkMovie>> {
+        return movieService.getMovies().also { response ->
+            // Store the movies in local database if none exist.
+            if (response.isSuccessful) {
+                movieDao.getMovies().collect { localMovies ->
+                    if (localMovies.isEmpty()) {
+                        response.body()?.map { it.toLocalMovie() }?.forEach { movieDao.insertMovie(it) }
+                    }
+                }
+            }
+        }
     }
 }

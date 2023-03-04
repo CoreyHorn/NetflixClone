@@ -16,15 +16,17 @@
 
 package com.example.netflixClone.data.di
 
+import com.example.netflixClone.data.DefaultMovieRepository
+import com.example.netflixClone.data.MovieRepository
+import com.example.netflixClone.data.local.database.Movie
+import com.example.netflixClone.data.remote.network.NetworkMovie
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import com.example.netflixClone.data.MovieRepository
-import com.example.netflixClone.data.DefaultMovieRepository
-import com.example.netflixClone.data.local.database.Movie
+import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,6 +45,10 @@ class FakeMovieRepository @Inject constructor() : MovieRepository {
     override val movies: Flow<List<Movie>> = flowOf(fakeMovies)
 
     override suspend fun add(title: String, imageUrl: String) {
+        throw NotImplementedError()
+    }
+
+    override suspend fun fetchMovies(): Response<List<NetworkMovie>> {
         throw NotImplementedError()
     }
 }

@@ -1,9 +1,7 @@
 package com.example.netflixClone.data.remote.network
 
-import com.example.netflixClone.data.local.database.MovieDao
 import retrofit2.Response
 import retrofit2.http.GET
-import javax.inject.Inject
 
 interface MovieApi{
     @GET("/movies")
@@ -16,14 +14,8 @@ interface MovieApi{
  * - global storing of data to a local cache
  * - mocking results for testing
  */
-class FakeMovieService @Inject constructor(val movieDao: MovieDao): MovieApi {
+class FakeMovieService(): MovieApi {
     override suspend fun getMovies(): Response<List<NetworkMovie>> {
-        movieDao.getMovies().collect {
-            if (it.isEmpty()) {
-                fakeNetworkMovies.forEach { movie -> movieDao.insertMovie(movie.toLocalMovie()) }
-            }
-        }
-
         return Response.success(fakeNetworkMovies)
     }
 }
