@@ -16,7 +16,6 @@
 
 package com.example.netflixClone.ui.movie
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -43,7 +42,6 @@ fun MovieScreen(modifier: Modifier = Modifier, viewModel: MovieViewModel = hiltV
     ) {
         lifecycle.repeatOnLifecycle(state = STARTED) {
             viewModel.uiState.collect {
-                Log.d("stuff", it.toString())
                 value = it
             }
         }

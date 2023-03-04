@@ -24,6 +24,7 @@ import com.example.netflixClone.data.remote.network.toLocalMovie
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import javax.inject.Inject
+import javax.inject.Named
 
 interface MovieRepository {
     val movies: Flow<List<Movie>>
@@ -33,7 +34,7 @@ interface MovieRepository {
 }
 
 class DefaultMovieRepository @Inject constructor(
-    private val movieDao: MovieDao, private val movieService: MovieApi
+    private val movieDao: MovieDao, @Named("FakeMovieService") private val movieService: MovieApi
 ) : MovieRepository {
 
     override val movies: Flow<List<Movie>> = movieDao.getMovies()
