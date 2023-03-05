@@ -6,25 +6,25 @@ import retrofit2.http.GET
 interface MovieApi {
     @GET("/movies")
     suspend fun getMovies(): Response<List<NetworkMovie>>
+
+    @GET("/headerMovie")
+    suspend fun getHeaderMovie(): Response<NetworkMovie>
 }
 
-/**
- * Services can be a good place for:
- * - modifying the data or return type visible to the viewModel
- * - global storing of data to a local cache
- * - mocking results for testing
- */
 class FakeMovieService : MovieApi {
     override suspend fun getMovies(): Response<List<NetworkMovie>> {
         return Response.success(fakeNetworkMovies)
     }
-}
 
-class TestMovieService : MovieApi {
-    override suspend fun getMovies(): Response<List<NetworkMovie>> {
-        return Response.success(fakeNetworkMovies)
+    override suspend fun getHeaderMovie(): Response<NetworkMovie> {
+        return Response.success(fakeHeaderMovie)
     }
 }
+
+val fakeHeaderMovie = NetworkMovie(
+    "2 Guns",
+    "https://m.media-amazon.com/images/M/MV5BY2JhZTRlYzYtZmI1OS00NTRhLWFjNGYtNzI1ODJmNmZhZGU1XkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_Ratio1.0000_AL_.jpg"
+)
 
 val fakeNetworkMovies = listOf(
     NetworkMovie(

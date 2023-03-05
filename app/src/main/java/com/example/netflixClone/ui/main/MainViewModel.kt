@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.netflixClone.data.MovieRepository
 import com.example.netflixClone.data.local.database.Movie
-import com.example.netflixClone.data.remote.network.HeaderMovie
+import com.example.netflixClone.data.remote.network.toLocalMovie
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -18,9 +18,17 @@ class MainViewModel @Inject constructor(
     private val _state = MutableStateFlow<MainState>(MainState.Loading)
     val state = _state.asStateFlow().onStart {
         viewModelScope.launch { movieRepository.fetchMovies() }
-    }
-
-    init {
+        viewModelScope.launch {
+            val headerMovieResponse = movieRepository.fetchHeaderMovie()
+            if (headerMovieResponse.isSuccessful) {
+                _state.update {
+                    MainState.Success(
+                        it.movies,
+                        headerMovieResponse.body()!!.toLocalMovie()
+                    )
+                }
+            }
+        }
         viewModelScope.launch {
             movieRepository.movies.map { movies ->
                 MainState.Success(movies, _state.map { it.headerMovie }.first())
@@ -31,24 +39,23 @@ class MainViewModel @Inject constructor(
             }
         }
     }
-
 }
 
 sealed interface MainState {
     val movies: List<Movie>?
-    val headerMovie: HeaderMovie?
+    val headerMovie: Movie?
 
     object Loading : MainState {
         override val movies: List<Movie>? = null
-        override val headerMovie: HeaderMovie? = null
+        override val headerMovie: Movie? = null
     }
 
     data class Error(val throwable: Throwable) : MainState {
         override val movies: List<Movie>? = null
-        override val headerMovie: HeaderMovie? = null
+        override val headerMovie: Movie? = null
     }
 
-    data class Success(override val movies: List<Movie>?, override val headerMovie: HeaderMovie?) :
+    data class Success(override val movies: List<Movie>?, override val headerMovie: Movie?) :
         MainState
 
 }

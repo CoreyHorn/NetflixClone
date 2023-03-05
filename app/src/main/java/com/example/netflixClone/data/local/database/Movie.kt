@@ -36,4 +36,7 @@ interface MovieDao {
 
     @Insert
     suspend fun insertMovie(item: Movie)
+
+    @Insert
+    suspend fun insertMovies(movies: List<Movie>)
 }

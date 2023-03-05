@@ -34,7 +34,7 @@ class MovieViewModel @Inject constructor(
     val uiState: StateFlow<MovieUiState> = movieRepository
         .movies.map(::Success)
         .catch { Error(it) }
-        .onStart { viewModelScope.launch { movieRepository.fetchMovies() } }
+//        .onStart { viewModelScope.launch { movieRepository.fetchMovies() } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
 
     fun addMovie(title: String, imageURL: String) {

@@ -51,6 +51,10 @@ class FakeMovieRepository @Inject constructor() : MovieRepository {
     override suspend fun fetchMovies(): Response<List<NetworkMovie>> {
         throw NotImplementedError()
     }
+
+    override suspend fun fetchHeaderMovie(): Response<NetworkMovie> {
+        throw NotImplementedError()
+    }
 }
 
 val fakeMovies = listOf(

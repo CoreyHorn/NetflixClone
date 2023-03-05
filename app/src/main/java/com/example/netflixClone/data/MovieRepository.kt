@@ -21,6 +21,7 @@ import com.example.netflixClone.data.local.database.MovieDao
 import com.example.netflixClone.data.remote.network.MovieApi
 import com.example.netflixClone.data.remote.network.NetworkMovie
 import com.example.netflixClone.data.remote.network.toLocalMovie
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import javax.inject.Inject
@@ -31,6 +32,7 @@ interface MovieRepository {
 
     suspend fun add(title: String, imageUrl: String)
     suspend fun fetchMovies(): Response<List<NetworkMovie>>
+    suspend fun fetchHeaderMovie(): Response<NetworkMovie>
 }
 
 class DefaultMovieRepository @Inject constructor(
@@ -44,16 +46,23 @@ class DefaultMovieRepository @Inject constructor(
     }
 
     override suspend fun fetchMovies(): Response<List<NetworkMovie>> {
-        return movieService.getMovies().also { response ->
-            // Store the movies in local database if none exist.
-            if (response.isSuccessful) {
-                movieDao.getMovies().collect { localMovies ->
-                    if (localMovies.isEmpty()) {
-                        response.body()?.map { it.toLocalMovie() }
-                            ?.forEach { movieDao.insertMovie(it) }
-                    }
+        val response = movieService.getMovies()
+
+        // Cache movies locally if none exist
+        if (response.isSuccessful) {
+            coroutineScope {
+                movieDao.getMovies().collect { cachedMovies ->
+                    if (cachedMovies.isEmpty())
+                        movieDao.insertMovies(response.body()?.map { it.toLocalMovie() }!!)
+
                 }
             }
         }
+
+        return response
+    }
+
+    override suspend fun fetchHeaderMovie(): Response<NetworkMovie> {
+        return movieService.getHeaderMovie()
     }
 }
