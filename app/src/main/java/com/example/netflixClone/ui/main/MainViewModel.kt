@@ -27,11 +27,15 @@ class MainViewModel @Inject constructor(
                         headerMovieResponse.body()!!.toLocalMovie()
                     )
                 }
+            } else {
+                _state.update {
+                    MainState.Error(null, _state.value.movies, _state.value.headerMovie)
+                }
             }
         }
         viewModelScope.launch {
             movieRepository.movies.map { movies ->
-                MainState.Success(movies, _state.map { it.headerMovie }.first())
+                MainState.Success(movies, _state.value.headerMovie)
             }.catch {
                 MainState.Error(it)
             }.collect { result ->
@@ -50,10 +54,11 @@ sealed interface MainState {
         override val headerMovie: Movie? = null
     }
 
-    data class Error(val throwable: Throwable) : MainState {
-        override val movies: List<Movie>? = null
+    data class Error(
+        val throwable: Throwable?,
+        override val movies: List<Movie>? = null,
         override val headerMovie: Movie? = null
-    }
+    ) : MainState
 
     data class Success(override val movies: List<Movie>?, override val headerMovie: Movie?) :
         MainState
