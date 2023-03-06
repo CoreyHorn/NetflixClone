@@ -53,26 +53,30 @@ fun MainView(
 
     val coroutineScope = rememberCoroutineScope()
 
-    ModalBottomSheetLayout(sheetState = bottomSheetState, sheetContent = {
-        MovieDetailBottomSheet(currentlySelectedMovie) {
-            coroutineScope.launch {
-                bottomSheetState.hide()
+    if (state is MainState.Success) {
+        ModalBottomSheetLayout(sheetState = bottomSheetState, sheetContent = {
+            MovieDetailBottomSheet(currentlySelectedMovie) {
+                coroutineScope.launch {
+                    bottomSheetState.hide()
+                }
+            }
+        }) {
+            ContentView(statusBarHeight) {
+                val isNewMovie = it != currentlySelectedMovie
+                currentlySelectedMovie = it
+
+                val transform = if (!isNewMovie && bottomSheetState.isVisible) {
+                    suspend { bottomSheetState.hide() }
+                } else {
+                    suspend { bottomSheetState.show() }
+                }
+
+                coroutineScope.launch { transform() }
             }
         }
-    }) {
-        ContentView(statusBarHeight) {
-            val isNewMovie = it != currentlySelectedMovie
-            currentlySelectedMovie = it
+    } else Text("Loading")
 
-            val transform = if (!isNewMovie && bottomSheetState.isVisible) {
-                suspend { bottomSheetState.hide() }
-            } else {
-                suspend { bottomSheetState.show() }
-            }
 
-            coroutineScope.launch { transform() }
-        }
-    }
 }
 
 @Composable

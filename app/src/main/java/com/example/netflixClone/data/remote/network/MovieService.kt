@@ -4,59 +4,96 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 interface MovieApi {
+
+    @GET("/main")
+    suspend fun getMain(): Response<MainResponse>
+
     @GET("/movies")
-    suspend fun getMovies(): Response<List<NetworkMovie>>
+    suspend fun getMovies(): Response<List<MovieResponse>>
 
     @GET("/headerMovie")
-    suspend fun getHeaderMovie(): Response<NetworkMovie>
+    suspend fun getHeaderMovie(): Response<MovieResponse>
 }
 
 class FakeMovieService : MovieApi {
-    override suspend fun getMovies(): Response<List<NetworkMovie>> {
-        return Response.success(fakeNetworkMovies)
+
+    override suspend fun getMain(): Response<MainResponse> {
+        return Response.success(fakeMainResponse)
     }
 
-    override suspend fun getHeaderMovie(): Response<NetworkMovie> {
+    override suspend fun getMovies(): Response<List<MovieResponse>> {
+        return Response.success(fakeMovieResponses)
+    }
+
+    override suspend fun getHeaderMovie(): Response<MovieResponse> {
         return Response.success(fakeHeaderMovie)
     }
 }
 
-val fakeHeaderMovie = NetworkMovie(
+val fakeHeaderMovie = MovieResponse(
     "2 Guns",
     "https://m.media-amazon.com/images/M/MV5BY2JhZTRlYzYtZmI1OS00NTRhLWFjNGYtNzI1ODJmNmZhZGU1XkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_Ratio1.0000_AL_.jpg"
 )
 
-val fakeNetworkMovies = listOf(
-    NetworkMovie(
+val fakeMovieResponses = listOf(
+    MovieResponse(
         "Star Trek Picard",
         "https://image.tmdb.org/t/p/original/nIlAKIrLKxOeoEnc0Urb65yNCp.jpg"
     ),
-    NetworkMovie(
+    MovieResponse(
         "Ant-Man and the Wasp: Quantumania",
         "https://image.tmdb.org/t/p/original/ngl2FKBlU4fhbdsrtdom9LVLBXw.jpg"
     ),
-    NetworkMovie(
+    MovieResponse(
         "Carnival Row",
         "https://image.tmdb.org/t/p/original/jyhxT10e2z9IDsKoIQDKhyxSQJt.jpg"
     ),
-    NetworkMovie(
+    MovieResponse(
         "Outer Banks",
         "https://image.tmdb.org/t/p/original/ovDgO2LPfwdVRfvScAqo9aMiIW.jpg"
     ),
-    NetworkMovie(
+    MovieResponse(
         "The Consultant",
         "https://image.tmdb.org/t/p/original/thqmhjLaMf2n0Ebl7oLRjH6VD15.jpg"
     ),
-    NetworkMovie(
+    MovieResponse(
         "The Last of Us",
         "https://image.tmdb.org/t/p/original/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg"
     ),
-    NetworkMovie(
+    MovieResponse(
         "Knock at the Cabin",
         "https://image.tmdb.org/t/p/original/dm06L9pxDOL9jNSK4Cb6y139rrG.jpg"
     ),
-    NetworkMovie(
+    MovieResponse(
         "80 for Brady",
         "https://image.tmdb.org/t/p/original/jixBLmH4gQuTKTenZr89egvqZbW.jpg"
     )
+)
+
+val fakeCategories = listOf(
+    CategoryResponse(
+        "Because you watched...",
+        fakeMovieResponses
+    ),
+    CategoryResponse(
+        "Continue Watching for Corey",
+        fakeMovieResponses
+    ),
+    CategoryResponse(
+        "Trending Now",
+        fakeMovieResponses
+    ),
+    CategoryResponse(
+        "New Releases",
+        fakeMovieResponses
+    ),
+    CategoryResponse(
+        "Only on Netflix",
+        fakeMovieResponses
+    )
+)
+
+val fakeMainResponse = MainResponse(
+    fakeHeaderMovie,
+    fakeCategories
 )

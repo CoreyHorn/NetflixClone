@@ -19,7 +19,7 @@ package com.example.netflixClone.data.di
 import com.example.netflixClone.data.DefaultMovieRepository
 import com.example.netflixClone.data.MovieRepository
 import com.example.netflixClone.data.local.database.Movie
-import com.example.netflixClone.data.remote.network.NetworkMovie
+import com.example.netflixClone.data.remote.network.MovieResponse
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -48,11 +48,11 @@ class FakeMovieRepository @Inject constructor() : MovieRepository {
         throw NotImplementedError()
     }
 
-    override suspend fun fetchMovies(): Response<List<NetworkMovie>> {
+    override suspend fun fetchMovies(): Response<List<MovieResponse>> {
         throw NotImplementedError()
     }
 
-    override suspend fun fetchHeaderMovie(): Response<NetworkMovie> {
+    override suspend fun fetchHeaderMovie(): Response<MovieResponse> {
         throw NotImplementedError()
     }
 }

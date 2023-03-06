@@ -19,7 +19,7 @@ package com.example.netflixClone.data
 import com.example.netflixClone.data.local.database.Movie
 import com.example.netflixClone.data.local.database.MovieDao
 import com.example.netflixClone.data.remote.network.MovieApi
-import com.example.netflixClone.data.remote.network.NetworkMovie
+import com.example.netflixClone.data.remote.network.MovieResponse
 import com.example.netflixClone.data.remote.network.toLocalMovie
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -31,8 +31,8 @@ interface MovieRepository {
     val movies: Flow<List<Movie>>
 
     suspend fun add(title: String, imageUrl: String)
-    suspend fun fetchMovies(): Response<List<NetworkMovie>>
-    suspend fun fetchHeaderMovie(): Response<NetworkMovie>
+    suspend fun fetchMovies(): Response<List<MovieResponse>>
+    suspend fun fetchHeaderMovie(): Response<MovieResponse>
 }
 
 class DefaultMovieRepository @Inject constructor(
@@ -45,7 +45,7 @@ class DefaultMovieRepository @Inject constructor(
         movieDao.insertMovie(Movie(title, imageUrl))
     }
 
-    override suspend fun fetchMovies(): Response<List<NetworkMovie>> {
+    override suspend fun fetchMovies(): Response<List<MovieResponse>> {
         val response = movieService.getMovies()
 
         // Cache movies locally if none exist
@@ -62,7 +62,7 @@ class DefaultMovieRepository @Inject constructor(
         return response
     }
 
-    override suspend fun fetchHeaderMovie(): Response<NetworkMovie> {
+    override suspend fun fetchHeaderMovie(): Response<MovieResponse> {
         return movieService.getHeaderMovie()
     }
 }

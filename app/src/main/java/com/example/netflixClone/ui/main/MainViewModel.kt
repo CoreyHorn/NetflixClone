@@ -2,65 +2,50 @@ package com.example.netflixClone.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.netflixClone.data.MovieRepository
 import com.example.netflixClone.data.local.database.Movie
+import com.example.netflixClone.data.remote.network.CategoryResponse
+import com.example.netflixClone.data.remote.network.MovieApi
 import com.example.netflixClone.data.remote.network.toLocalMovie
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    movieRepository: MovieRepository
+    @Named("FakeMovieService") movieService: MovieApi
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<MainState>(MainState.Loading)
     val state = _state.asStateFlow().onStart {
-        viewModelScope.launch { movieRepository.fetchMovies() }
         viewModelScope.launch {
-            val headerMovieResponse = movieRepository.fetchHeaderMovie()
-            if (headerMovieResponse.isSuccessful) {
-                _state.update {
-                    MainState.Success(
-                        it.movies,
-                        headerMovieResponse.body()!!.toLocalMovie()
-                    )
-                }
-            } else {
-                _state.update {
-                    MainState.Error(null, _state.value.movies, _state.value.headerMovie)
-                }
-            }
-        }
-        viewModelScope.launch {
-            movieRepository.movies.map { movies ->
-                MainState.Success(movies, _state.value.headerMovie)
-            }.catch {
-                MainState.Error(it)
-            }.collect { result ->
-                _state.update { result }
-            }
+            val mainResponse = movieService.getMain()
+            if (mainResponse.isSuccessful) {
+                _state.value = MainState.Success(mainResponse.body()?.categories!!, mainResponse.body()?.header?.toLocalMovie())
+            } else { _state.value = MainState.Error(null, _state.value.categories, _state.value.headerMovie) }
         }
     }
 }
 
 sealed interface MainState {
-    val movies: List<Movie>?
+    val categories: List<CategoryResponse>?
     val headerMovie: Movie?
 
     object Loading : MainState {
-        override val movies: List<Movie>? = null
+        override val categories: List<CategoryResponse>? = null
         override val headerMovie: Movie? = null
     }
 
     data class Error(
         val throwable: Throwable?,
-        override val movies: List<Movie>? = null,
+        override val categories: List<CategoryResponse>? = null,
         override val headerMovie: Movie? = null
     ) : MainState
 
-    data class Success(override val movies: List<Movie>?, override val headerMovie: Movie?) :
+    data class Success(override val categories: List<CategoryResponse>?, override val headerMovie: Movie?) :
         MainState
 
 }
