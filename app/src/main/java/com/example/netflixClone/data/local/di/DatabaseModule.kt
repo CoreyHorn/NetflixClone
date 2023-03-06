@@ -19,6 +19,7 @@ package com.example.netflixClone.data.local.di
 import android.content.Context
 import androidx.room.Room
 import com.example.netflixClone.data.local.database.AppDatabase
+import com.example.netflixClone.data.local.database.LocalMovieDao
 import com.example.netflixClone.data.local.database.MovieDao
 import dagger.Module
 import dagger.Provides
@@ -31,6 +32,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class DatabaseModule {
+
+    @Provides
+    fun provideLocalMovieDao(appDatabase: AppDatabase): LocalMovieDao {
+        return appDatabase.localMovieDao()
+    }
+
     @Provides
     fun provideMovieDao(appDatabase: AppDatabase): MovieDao {
         return appDatabase.movieDao()

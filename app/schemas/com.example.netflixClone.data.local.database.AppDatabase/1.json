@@ -2,11 +2,37 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5b5971700db7d3e04a66da9f09d58a99",
+    "identityHash": "a50fd83ec498501b2a409c10fcff87d2",
     "entities": [
       {
+        "tableName": "Category",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`categoryTitle` TEXT NOT NULL, `categoryId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "categoryTitle",
+            "columnName": "categoryTitle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categoryId",
+            "columnName": "categoryId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "categoryId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
         "tableName": "Movie",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `percentFinished` REAL NOT NULL, `isNetflix` INTEGER NOT NULL, `isTopTen` INTEGER NOT NULL, PRIMARY KEY(`title`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `percentFinished` REAL NOT NULL, `isNetflixOnly` INTEGER NOT NULL, `isTopTen` INTEGER NOT NULL, `movieId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "title",
@@ -27,8 +53,110 @@
             "notNull": true
           },
           {
-            "fieldPath": "isNetflix",
-            "columnName": "isNetflix",
+            "fieldPath": "isNetflixOnly",
+            "columnName": "isNetflixOnly",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isTopTen",
+            "columnName": "isTopTen",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "movieId",
+            "columnName": "movieId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "movieId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "MovieCategoryCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`categoryId` INTEGER NOT NULL, `movieId` INTEGER NOT NULL, PRIMARY KEY(`categoryId`, `movieId`))",
+        "fields": [
+          {
+            "fieldPath": "categoryId",
+            "columnName": "categoryId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "movieId",
+            "columnName": "movieId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "categoryId",
+            "movieId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_MovieCategoryCrossRef_categoryId",
+            "unique": false,
+            "columnNames": [
+              "categoryId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_MovieCategoryCrossRef_categoryId` ON `${TABLE_NAME}` (`categoryId`)"
+          },
+          {
+            "name": "index_MovieCategoryCrossRef_movieId",
+            "unique": false,
+            "columnNames": [
+              "movieId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_MovieCategoryCrossRef_movieId` ON `${TABLE_NAME}` (`movieId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "LocalMovie",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`movieId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `percentFinished` REAL NOT NULL, `isNetflixOnly` INTEGER NOT NULL, `isTopTen` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "movieId",
+            "columnName": "movieId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "imageUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "percentFinished",
+            "columnName": "percentFinished",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isNetflixOnly",
+            "columnName": "isNetflixOnly",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -40,19 +168,95 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
-            "title"
+            "movieId"
           ]
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "LocalCategory",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`categoryId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "categoryId",
+            "columnName": "categoryId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "categoryId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "MovieCategoryCrossRefNew",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`categoryId` INTEGER NOT NULL, `movieId` INTEGER NOT NULL, PRIMARY KEY(`categoryId`, `movieId`), FOREIGN KEY(`categoryId`) REFERENCES `LocalCategory`(`categoryId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`movieId`) REFERENCES `LocalMovie`(`movieId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "categoryId",
+            "columnName": "categoryId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "movieId",
+            "columnName": "movieId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "categoryId",
+            "movieId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "LocalCategory",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "categoryId"
+            ],
+            "referencedColumns": [
+              "categoryId"
+            ]
+          },
+          {
+            "table": "LocalMovie",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "movieId"
+            ],
+            "referencedColumns": [
+              "movieId"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5b5971700db7d3e04a66da9f09d58a99')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a50fd83ec498501b2a409c10fcff87d2')"
     ]
   }
 }

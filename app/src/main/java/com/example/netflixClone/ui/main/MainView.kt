@@ -22,9 +22,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.netflixClone.data.di.fakeMovies
+import com.example.netflixClone.data.local.database.CategoryWithMovies
 import com.example.netflixClone.data.local.database.Movie
-import com.example.netflixClone.data.remote.network.CategoryResponse
-import com.example.netflixClone.data.remote.network.toLocalMovie
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -84,7 +83,7 @@ fun MainView(
 }
 
 @Composable
-private fun ContentView(topPadding: MutableState<Int>, headerMovie: Movie?, categories: List<CategoryResponse>, onMovieClick: (Movie) -> Unit = {}) {
+private fun ContentView(topPadding: MutableState<Int>, headerMovie: Movie?, categories: List<CategoryWithMovies>, onMovieClick: (Movie) -> Unit = {}) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopStart,
@@ -124,9 +123,9 @@ fun MovieListTitle(text: String = "Popular on Netflix") {
     )
 }
 
-fun LazyListScope.nestedCategoryList(categories: List<CategoryResponse>, onMovieClick: (Movie) -> Unit) {
+fun LazyListScope.nestedCategoryList(categories: List<CategoryWithMovies>, onMovieClick: (Movie) -> Unit) {
     items(categories) { category ->
-        MovieListTitle(category.title)
-        HorizontalMovieList(category.movies.map { it.toLocalMovie() }, onMovieClick)
+        MovieListTitle(category.category.categoryTitle)
+        HorizontalMovieList(category.movies, onMovieClick)
     }
 }
