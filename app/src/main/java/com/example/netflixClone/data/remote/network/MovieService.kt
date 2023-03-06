@@ -19,6 +19,8 @@ class FakeMovieService : MovieApi {
 
     override suspend fun getMain(): Response<MainResponse> {
         return Response.success(fakeMainResponse)
+//        return Response.error(500, "{\"key\":[\"somestuff\"]}"
+//            .toResponseBody("application/json".toMediaTypeOrNull()))
     }
 
     override suspend fun getMovies(): Response<List<MovieResponse>> {

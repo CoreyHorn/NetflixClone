@@ -3,9 +3,7 @@ package com.example.netflixClone.ui.main
 import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
@@ -77,7 +75,10 @@ fun MainView(
                 coroutineScope.launch { transform() }
             }
         }
-    } else Text("Loading or Error") // TODO: Could create a good loading state or error handling
+    } else Column(modifier = Modifier.fillMaxSize().background(Color.Black).padding(24.dp)) {
+        Spacer(modifier = Modifier.height(48.dp))
+        Text("Loading or Error") // TODO: Could create a good loading state or error handling
+    }
 
 
 }
