@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,6 +25,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.netflixClone.data.di.fakeMovies
 import com.example.netflixClone.data.local.database.Movie
+import com.example.netflixClone.data.remote.network.CategoryResponse
+import com.example.netflixClone.data.remote.network.toLocalMovie
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -61,7 +64,7 @@ fun MainView(
                 }
             }
         }) {
-            ContentView(statusBarHeight) {
+            ContentView(statusBarHeight, state.headerMovie, state.categories?: emptyList()) {
                 val isNewMovie = it != currentlySelectedMovie
                 currentlySelectedMovie = it
 
@@ -74,22 +77,22 @@ fun MainView(
                 coroutineScope.launch { transform() }
             }
         }
-    } else Text("Loading")
+    } else Text("Loading or Error") // TODO: Could create a good loading state or error handling
 
 
 }
 
 @Composable
-private fun ContentView(topPadding: MutableState<Int>, onMovieClick: (Movie) -> Unit = {}) {
+private fun ContentView(topPadding: MutableState<Int>, headerMovie: Movie?, categories: List<CategoryResponse>, onMovieClick: (Movie) -> Unit = {}) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopStart,
     ) {
         LazyColumn(Modifier.background(Color.Black)) {
             item {
-                MovieHeader()
+                MovieHeader(headerMovie)
             }
-            nestedCategoryList(onMovieClick)
+            nestedCategoryList(categories, onMovieClick)
         }
         AppBar(topPadding)
         BottomBar(Modifier.align(Alignment.BottomCenter))
@@ -120,25 +123,9 @@ fun MovieListTitle(text: String = "Popular on Netflix") {
     )
 }
 
-@Preview()
-@Composable
-fun CategoryList(headerItem: Unit = MovieHeader(), onMovieClick: (Movie) -> Unit = {}) {
-    LazyColumn(
-        Modifier.background(Color.Black)
-    ) {
-        item {
-            headerItem
-        }
-        items(20) {
-            MovieListTitle()
-            HorizontalMovieList(fakeMovies, onMovieClick)
-        }
-    }
-}
-
-fun LazyListScope.nestedCategoryList(onMovieClick: (Movie) -> Unit) {
-    items(10) {
-        MovieListTitle()
-        HorizontalMovieList(fakeMovies, onMovieClick)
+fun LazyListScope.nestedCategoryList(categories: List<CategoryResponse>, onMovieClick: (Movie) -> Unit) {
+    items(categories) { category ->
+        MovieListTitle(category.title)
+        HorizontalMovieList(category.movies.map { it.toLocalMovie() }, onMovieClick)
     }
 }

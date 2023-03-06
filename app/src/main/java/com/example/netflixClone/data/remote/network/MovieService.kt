@@ -73,23 +73,23 @@ val fakeMovieResponses = listOf(
 val fakeCategories = listOf(
     CategoryResponse(
         "Because you watched...",
-        fakeMovieResponses
+        fakeMovieResponses.shuffled()
     ),
     CategoryResponse(
         "Continue Watching for Corey",
-        fakeMovieResponses
+        fakeMovieResponses.shuffled()
     ),
     CategoryResponse(
         "Trending Now",
-        fakeMovieResponses
+        fakeMovieResponses.shuffled()
     ),
     CategoryResponse(
         "New Releases",
-        fakeMovieResponses
+        fakeMovieResponses.shuffled()
     ),
     CategoryResponse(
         "Only on Netflix",
-        fakeMovieResponses
+        fakeMovieResponses.shuffled()
     )
 )
 

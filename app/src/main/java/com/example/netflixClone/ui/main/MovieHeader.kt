@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,17 +25,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.netflixClone.R
+import com.example.netflixClone.data.di.fakeMovies
+import com.example.netflixClone.data.local.database.Movie
 
 @Preview
 @Composable
-fun MovieHeader() {
+fun MovieHeader(movie: Movie? = fakeMovies.first()) {
     Box(modifier = Modifier.wrapContentHeight()) {
-        AsyncImage(
-            model = "https://m.media-amazon.com/images/M/MV5BY2JhZTRlYzYtZmI1OS00NTRhLWFjNGYtNzI1ODJmNmZhZGU1XkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_Ratio1.0000_AL_.jpg",
-            contentDescription = "Lost Poster",
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier.fillMaxWidth()
-        )
+        movie?.let {
+            AsyncImage(
+                model = movie.imageUrl,
+                contentDescription = movie.title,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
         // Contains the tags and buttons at the bottom of the movie image
         Column(
             modifier = Modifier
@@ -51,9 +56,9 @@ fun MovieHeader() {
                     .padding(12.dp)
             ) {
 
-                TextButton(id = R.drawable.ic_baseline_add_24, "My List")
+                TextButton(id = R.drawable.ic_baseline_add_24, stringResource(id = R.string.my_list))
                 PlayButton()
-                TextButton(id = R.drawable.ic_outline_info_24, text = "Info")
+                TextButton(id = R.drawable.ic_outline_info_24, text = stringResource(id = R.string.info))
             }
         }
     }
@@ -87,13 +92,14 @@ fun PlayButton() {
                 .dp
         )
     ) {
+        val play = stringResource(id = R.string.play)
         Image(
             painterResource(id = R.drawable.ic_baseline_play_arrow_24),
-            contentDescription = "Play button icon",
+            contentDescription = play,
             colorFilter = ColorFilter.tint(Color.Black)
         )
         Text(
-            text = "Play",
+            text = play,
             fontSize = 14.sp,
             modifier = Modifier.padding(start = 4.dp),
             color = Color.Black,
@@ -102,10 +108,10 @@ fun PlayButton() {
     }
 }
 
+//TODO: Add tags to the data model
 @Preview
 @Composable
 fun HeaderTags() {
-    // Tags
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
