@@ -35,7 +35,7 @@ fun MovieHeader(movie: Movie? = fakeMovies.first()) {
         movie?.let {
             AsyncImage(
                 model = movie.imageUrl,
-                contentDescription = movie.title,
+                contentDescription = movie.movieTitle,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -56,9 +56,15 @@ fun MovieHeader(movie: Movie? = fakeMovies.first()) {
                     .padding(12.dp)
             ) {
 
-                TextButton(id = R.drawable.ic_baseline_add_24, stringResource(id = R.string.my_list))
+                TextButton(
+                    id = R.drawable.ic_baseline_add_24,
+                    stringResource(id = R.string.my_list)
+                )
                 PlayButton()
-                TextButton(id = R.drawable.ic_outline_info_24, text = stringResource(id = R.string.info))
+                TextButton(
+                    id = R.drawable.ic_outline_info_24,
+                    text = stringResource(id = R.string.info)
+                )
             }
         }
     }

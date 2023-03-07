@@ -19,11 +19,10 @@ package com.example.netflixClone.ui.movie
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.netflixClone.data.MovieRepository
-import com.example.netflixClone.data.local.database.Movie
+import com.example.netflixClone.data.local.database.CategoryWithMovies
 import com.example.netflixClone.ui.movie.MovieUiState.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,16 +35,10 @@ class MovieViewModel @Inject constructor(
         .catch { Error(it) }
 //        .onStart { viewModelScope.launch { movieRepository.fetchMovies() } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
-
-    fun addMovie(title: String, imageURL: String) {
-        viewModelScope.launch {
-            movieRepository.add(title, imageURL)
-        }
-    }
 }
 
 sealed interface MovieUiState {
     object Loading : MovieUiState
     data class Error(val throwable: Throwable) : MovieUiState
-    data class Success(val data: List<Movie>) : MovieUiState
+    data class Success(val data: List<CategoryWithMovies>) : MovieUiState
 }

@@ -40,7 +40,7 @@ fun MainView(
     ) {
         lifecycle.repeatOnLifecycle(state = Lifecycle.State.STARTED) {
             viewModel.state.collect {
-                Log.d("stuff", it.toString())
+                Log.d("stuff3", it.toString())
                 value = it
             }
         }
@@ -61,7 +61,7 @@ fun MainView(
                 }
             }
         }) {
-            ContentView(statusBarHeight, state.headerMovie, state.categories?: emptyList()) {
+            ContentView(statusBarHeight, state.headerMovie, state.categories ?: emptyList()) {
                 val isNewMovie = it != currentlySelectedMovie
                 currentlySelectedMovie = it
 
@@ -74,7 +74,10 @@ fun MainView(
                 coroutineScope.launch { transform() }
             }
         }
-    } else Column(modifier = Modifier.fillMaxSize().background(Color.Black).padding(24.dp)) {
+    } else Column(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.Black)
+        .padding(24.dp)) {
         Spacer(modifier = Modifier.height(48.dp))
         Text("Loading or Error") // TODO: Could create a good loading state or error handling
     }
@@ -83,7 +86,12 @@ fun MainView(
 }
 
 @Composable
-private fun ContentView(topPadding: MutableState<Int>, headerMovie: Movie?, categories: List<CategoryWithMovies>, onMovieClick: (Movie) -> Unit = {}) {
+private fun ContentView(
+    topPadding: MutableState<Int>,
+    headerMovie: Movie?,
+    categories: List<CategoryWithMovies>,
+    onMovieClick: (Movie) -> Unit = {}
+) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopStart,
@@ -123,7 +131,10 @@ fun MovieListTitle(text: String = "Popular on Netflix") {
     )
 }
 
-fun LazyListScope.nestedCategoryList(categories: List<CategoryWithMovies>, onMovieClick: (Movie) -> Unit) {
+fun LazyListScope.nestedCategoryList(
+    categories: List<CategoryWithMovies>,
+    onMovieClick: (Movie) -> Unit
+) {
     items(categories) { category ->
         MovieListTitle(category.category.categoryTitle)
         HorizontalMovieList(category.movies, onMovieClick)
