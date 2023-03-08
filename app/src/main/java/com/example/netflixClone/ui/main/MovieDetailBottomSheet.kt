@@ -41,7 +41,12 @@ fun MovieDetailBottomSheet(movie: Movie = fakeMovies.first(), onClose: () -> Uni
                         .weight(1f)
                         .padding(start = 8.dp)
                 ) {
-                    Text(text = movie.title, fontSize = 24.sp, maxLines = 2, color = Color.White)
+                    Text(
+                        text = movie.movieTitle,
+                        fontSize = 24.sp,
+                        maxLines = 2,
+                        color = Color.White
+                    )
                     Row(
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         modifier = Modifier.fillMaxWidth()

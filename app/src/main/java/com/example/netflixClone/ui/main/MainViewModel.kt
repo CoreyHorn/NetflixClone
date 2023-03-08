@@ -3,9 +3,10 @@ package com.example.netflixClone.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.netflixClone.data.MovieRepository
+import com.example.netflixClone.data.local.database.CategoryWithMovies
 import com.example.netflixClone.data.local.database.Movie
-import com.example.netflixClone.data.remote.network.toLocalMovie
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,52 +16,61 @@ class MainViewModel @Inject constructor(
     movieRepository: MovieRepository
 ) : ViewModel() {
 
+    private val dataDebounce = 200L
+
+    /**
+     * Convert back to use The repository
+     */
     private val _state = MutableStateFlow<MainState>(MainState.Loading)
+    @OptIn(FlowPreview::class)
     val state = _state.asStateFlow().onStart {
-        viewModelScope.launch { movieRepository.fetchMovies() }
+        // Listen to header movie
         viewModelScope.launch {
-            val headerMovieResponse = movieRepository.fetchHeaderMovie()
-            if (headerMovieResponse.isSuccessful) {
-                _state.update {
-                    MainState.Success(
-                        it.movies,
-                        headerMovieResponse.body()!!.toLocalMovie()
-                    )
-                }
-            } else {
-                _state.update {
-                    MainState.Error(null, _state.value.movies, _state.value.headerMovie)
-                }
+            movieRepository.headerMovie.debounce(dataDebounce).collect { movie ->
+                _state.update { MainState.Success(it.categories, movie) }
             }
         }
+
+        // Listen to movies coming from Database
         viewModelScope.launch {
-            movieRepository.movies.map { movies ->
-                MainState.Success(movies, _state.value.headerMovie)
-            }.catch {
-                MainState.Error(it)
-            }.collect { result ->
-                _state.update { result }
-            }
+            movieRepository.movies.debounce(dataDebounce)
+                .collect { categories ->
+                    _state.update {
+                        MainState.Success(categories, it.headerMovie)
+                    }
+                }
+        }
+
+        // Request movies from the network - possible error
+        viewModelScope.launch {
+            val fetchRequest = movieRepository.fetchMovies()
+            if (!fetchRequest.isSuccessful)
+                _state.update {
+                    MainState.Error(Throwable(fetchRequest.errorBody().toString()), it.categories, it.headerMovie)
+                }
         }
     }
 }
 
 sealed interface MainState {
-    val movies: List<Movie>?
+    val categories: List<CategoryWithMovies>?
     val headerMovie: Movie?
 
     object Loading : MainState {
-        override val movies: List<Movie>? = null
+        override val categories: List<CategoryWithMovies>? = null
         override val headerMovie: Movie? = null
     }
 
     data class Error(
         val throwable: Throwable?,
-        override val movies: List<Movie>? = null,
+        override val categories: List<CategoryWithMovies>? = null,
         override val headerMovie: Movie? = null
     ) : MainState
 
-    data class Success(override val movies: List<Movie>?, override val headerMovie: Movie?) :
+    data class Success(
+        override val categories: List<CategoryWithMovies>?,
+        override val headerMovie: Movie?
+    ) :
         MainState
 
 }

@@ -18,6 +18,8 @@ package com.example.netflixClone.data.di
 
 import com.example.netflixClone.data.DefaultMovieRepository
 import com.example.netflixClone.data.MovieRepository
+import com.example.netflixClone.data.local.database.Category
+import com.example.netflixClone.data.local.database.CategoryWithMovies
 import com.example.netflixClone.data.local.database.Movie
 import com.example.netflixClone.data.remote.network.NetworkMovie
 import dagger.Binds
@@ -42,19 +44,21 @@ interface DataModule {
 }
 
 class FakeMovieRepository @Inject constructor() : MovieRepository {
-    override val movies: Flow<List<Movie>> = flowOf(fakeMovies)
-
-    override suspend fun add(title: String, imageUrl: String) {
-        throw NotImplementedError()
-    }
+    override val movies: Flow<List<CategoryWithMovies>> = flowOf(
+        listOf(
+            CategoryWithMovies(
+                Category(categoryTitle = "categoryTitle"),
+                listOf(Movie(movieTitle = "movieTitle", imageUrl = "http://example.com/whatever"))
+            )
+        )
+    )
 
     override suspend fun fetchMovies(): Response<List<NetworkMovie>> {
         throw NotImplementedError()
     }
 
-    override suspend fun fetchHeaderMovie(): Response<NetworkMovie> {
-        throw NotImplementedError()
-    }
+    override val headerMovie: Flow<Movie>
+        get() = TODO("Not yet implemented")
 }
 
 val fakeMovies = listOf(

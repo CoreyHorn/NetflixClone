@@ -28,8 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle.State.STARTED
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.netflixClone.data.di.fakeMovies
-import com.example.netflixClone.data.local.database.Movie
+import com.example.netflixClone.data.local.database.CategoryWithMovies
 import com.example.netflixClone.ui.theme.MyApplicationTheme
 
 @Composable
@@ -47,17 +46,17 @@ fun MovieScreen(modifier: Modifier = Modifier, viewModel: MovieViewModel = hiltV
         }
     }
     if (state is MovieUiState.Success) {
-        MovieScreen(
-            items = (state as MovieUiState.Success).data,
-            onSave = viewModel::addMovie,
-            modifier = modifier
-        )
+//        MovieScreen(
+//            items = (state as MovieUiState.Success).data,
+//            onSave = viewModel::addMovie,
+//            modifier = modifier
+//        )
     }
 }
 
 @Composable
 internal fun MovieScreen(
-    items: List<Movie>,
+    items: List<CategoryWithMovies>,
     onSave: (title: String, imageUrl: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -90,7 +89,7 @@ internal fun MovieScreen(
 @Composable
 private fun DefaultPreview() {
     MyApplicationTheme {
-        MovieScreen(fakeMovies, onSave = { title, url -> })
+//        MovieScreen(fakeMovies, onSave = { title, url -> })
     }
 }
 
@@ -98,6 +97,6 @@ private fun DefaultPreview() {
 @Composable
 private fun PortraitPreview() {
     MyApplicationTheme {
-        MovieScreen(fakeMovies, onSave = { title, url -> })
+//        MovieScreen(fakeMovies, onSave = { title, url -> })
     }
 }

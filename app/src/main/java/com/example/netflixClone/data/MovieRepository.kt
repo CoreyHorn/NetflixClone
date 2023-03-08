@@ -16,34 +16,38 @@
 
 package com.example.netflixClone.data
 
-import com.example.netflixClone.data.local.database.Movie
-import com.example.netflixClone.data.local.database.MovieDao
+import com.example.netflixClone.data.local.database.*
 import com.example.netflixClone.data.remote.network.MovieApi
 import com.example.netflixClone.data.remote.network.NetworkMovie
-import com.example.netflixClone.data.remote.network.toLocalMovie
+import com.example.netflixClone.data.remote.network.toCategoryMap
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.*
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Named
 
 interface MovieRepository {
-    val movies: Flow<List<Movie>>
-
-    suspend fun add(title: String, imageUrl: String)
+    val movies: Flow<List<CategoryWithMovies>>
+    val headerMovie: Flow<Movie?>
     suspend fun fetchMovies(): Response<List<NetworkMovie>>
-    suspend fun fetchHeaderMovie(): Response<NetworkMovie>
 }
 
 class DefaultMovieRepository @Inject constructor(
-    private val movieDao: MovieDao, @Named("FakeMovieService") private val movieService: MovieApi
+    @Named("FakeMovieService") private val movieService: MovieApi, private val movieDao: MovieDao
 ) : MovieRepository {
 
-    override val movies: Flow<List<Movie>> = movieDao.getMovies()
-
-    override suspend fun add(title: String, imageUrl: String) {
-        movieDao.insertMovie(Movie(title, imageUrl))
+    // Combine the default categories with property based filters
+    override val movies: Flow<List<CategoryWithMovies>> = combineTransform(
+        movieDao.getCategoriesWithMovies(),
+        movieDao.getNetflixExclusives(),
+        movieDao.getInProgress()
+    ) { categories: List<CategoryWithMovies>, exclusives: List<Movie>, inProgress: List<Movie> ->
+        val exclusiveCategory = CategoryWithMovies(Category(categoryTitle = "isNetflixOnly"), exclusives)
+        val inProgressCategory = CategoryWithMovies(Category(categoryTitle = "inProgress"), inProgress)
+        emit(listOf(inProgressCategory, exclusiveCategory) + categories)
     }
+
+    override val headerMovie: Flow<Movie?> = movieDao.getRandomMovie()
 
     override suspend fun fetchMovies(): Response<List<NetworkMovie>> {
         val response = movieService.getMovies()
@@ -51,18 +55,14 @@ class DefaultMovieRepository @Inject constructor(
         // Cache movies locally if none exist
         if (response.isSuccessful) {
             coroutineScope {
-                movieDao.getMovies().collect { cachedMovies ->
-                    if (cachedMovies.isEmpty())
-                        movieDao.insertMovies(response.body()?.map { it.toLocalMovie() }!!)
-
+                if (movieDao.getCategoriesWithMovies().firstOrNull() != null) {
+                    movieDao.insertCategoriesWithMovies(response.body()!!.toCategoryMap())
                 }
             }
         }
 
-        return response
-    }
 
-    override suspend fun fetchHeaderMovie(): Response<NetworkMovie> {
-        return movieService.getHeaderMovie()
+
+        return response
     }
 }

@@ -3,12 +3,11 @@ package com.example.netflixClone.ui.main
 import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.netflixClone.data.di.fakeMovies
+import com.example.netflixClone.data.local.database.CategoryWithMovies
 import com.example.netflixClone.data.local.database.Movie
 import kotlinx.coroutines.launch
 
@@ -40,7 +40,7 @@ fun MainView(
     ) {
         lifecycle.repeatOnLifecycle(state = Lifecycle.State.STARTED) {
             viewModel.state.collect {
-                Log.d("stuff", it.toString())
+                Log.d("state", it.headerMovie.toString())
                 value = it
             }
         }
@@ -53,39 +53,54 @@ fun MainView(
 
     val coroutineScope = rememberCoroutineScope()
 
-    ModalBottomSheetLayout(sheetState = bottomSheetState, sheetContent = {
-        MovieDetailBottomSheet(currentlySelectedMovie) {
-            coroutineScope.launch {
-                bottomSheetState.hide()
+    if (state is MainState.Success) {
+        ModalBottomSheetLayout(sheetState = bottomSheetState, sheetContent = {
+            MovieDetailBottomSheet(currentlySelectedMovie) {
+                coroutineScope.launch {
+                    bottomSheetState.hide()
+                }
+            }
+        }) {
+            ContentView(statusBarHeight, state.headerMovie, state.categories ?: emptyList()) {
+                val isNewMovie = it != currentlySelectedMovie
+                currentlySelectedMovie = it
+
+                val transform = if (!isNewMovie && bottomSheetState.isVisible) {
+                    suspend { bottomSheetState.hide() }
+                } else {
+                    suspend { bottomSheetState.show() }
+                }
+
+                coroutineScope.launch { transform() }
             }
         }
-    }) {
-        ContentView(statusBarHeight) {
-            val isNewMovie = it != currentlySelectedMovie
-            currentlySelectedMovie = it
-
-            val transform = if (!isNewMovie && bottomSheetState.isVisible) {
-                suspend { bottomSheetState.hide() }
-            } else {
-                suspend { bottomSheetState.show() }
-            }
-
-            coroutineScope.launch { transform() }
-        }
+    } else Column(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.Black)
+        .padding(24.dp)) {
+        Spacer(modifier = Modifier.height(48.dp))
+        Text("Loading or Error") // TODO: Could create a good loading state or error handling
     }
+
+
 }
 
 @Composable
-private fun ContentView(topPadding: MutableState<Int>, onMovieClick: (Movie) -> Unit = {}) {
+private fun ContentView(
+    topPadding: MutableState<Int>,
+    headerMovie: Movie?,
+    categories: List<CategoryWithMovies>,
+    onMovieClick: (Movie) -> Unit = {}
+) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopStart,
     ) {
         LazyColumn(Modifier.background(Color.Black)) {
             item {
-                MovieHeader()
+                MovieHeader(headerMovie)
             }
-            nestedCategoryList(onMovieClick)
+            nestedCategoryList(categories, onMovieClick)
         }
         AppBar(topPadding)
         BottomBar(Modifier.align(Alignment.BottomCenter))
@@ -116,25 +131,12 @@ fun MovieListTitle(text: String = "Popular on Netflix") {
     )
 }
 
-@Preview()
-@Composable
-fun CategoryList(headerItem: Unit = MovieHeader(), onMovieClick: (Movie) -> Unit = {}) {
-    LazyColumn(
-        Modifier.background(Color.Black)
-    ) {
-        item {
-            headerItem
-        }
-        items(20) {
-            MovieListTitle()
-            HorizontalMovieList(fakeMovies, onMovieClick)
-        }
-    }
-}
-
-fun LazyListScope.nestedCategoryList(onMovieClick: (Movie) -> Unit) {
-    items(10) {
-        MovieListTitle()
-        HorizontalMovieList(fakeMovies, onMovieClick)
+fun LazyListScope.nestedCategoryList(
+    categories: List<CategoryWithMovies>,
+    onMovieClick: (Movie) -> Unit
+) {
+    items(categories) { category ->
+        MovieListTitle(category.category.categoryTitle)
+        HorizontalMovieList(category.movies, onMovieClick)
     }
 }
