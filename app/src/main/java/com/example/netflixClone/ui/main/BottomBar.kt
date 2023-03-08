@@ -1,6 +1,7 @@
 package com.example.netflixClone.ui.main
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.ProvideTextStyle
@@ -60,7 +61,7 @@ fun BottomBarButton(
     tint: Color = Color.Gray,
     contentDescription: String = text
 ) {
-    Surface(color = Color.Transparent)
+    Surface(color = Color.Transparent, modifier = Modifier.clickable {  })
     {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(

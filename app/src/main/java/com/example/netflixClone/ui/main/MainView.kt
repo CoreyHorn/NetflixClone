@@ -13,14 +13,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import com.example.netflixClone.data.di.fakeMovies
 import com.example.netflixClone.data.local.database.CategoryWithMovies
 import com.example.netflixClone.data.local.database.Movie
@@ -32,20 +29,11 @@ fun MainView(
     viewModel: MainViewModel = hiltViewModel(),
     statusBarHeight: MutableState<Int> = mutableStateOf(107)
 ) {
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val state by produceState<MainState>(
-        initialValue = MainState.Loading,
-        key1 = lifecycle,
-        key2 = viewModel
-    ) {
-        lifecycle.repeatOnLifecycle(state = Lifecycle.State.STARTED) {
-            viewModel.state.collect {
-                Log.d("state", it.headerMovie.toString())
-                value = it
-            }
-        }
-    }
+    val categories = viewModel.categories.collectAsState(initial = emptyList()).value
+    val header = viewModel.header.collectAsState(initial = null).value
+    val state = viewModel.state.collectAsState(initial = MainState.Loading).value
 
+    Log.d("stuff", "state: $state, header: $header")
 
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -61,7 +49,7 @@ fun MainView(
                 }
             }
         }) {
-            ContentView(statusBarHeight, state.headerMovie, state.categories ?: emptyList()) {
+            ContentView(statusBarHeight, header, categories) {
                 val isNewMovie = it != currentlySelectedMovie
                 currentlySelectedMovie = it
 
@@ -100,7 +88,7 @@ private fun ContentView(
     ) {
         LazyColumn(Modifier.background(Color.Black)) {
             item {
-                MovieHeader(headerMovie)
+                MovieHeader(headerMovie, onMovieClick)
             }
             nestedCategoryList(categories, onMovieClick)
         }

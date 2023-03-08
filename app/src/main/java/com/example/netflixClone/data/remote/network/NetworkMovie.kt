@@ -54,29 +54,29 @@ fun NetworkMovie.toLocalMovie(): Movie {
 
 enum class NetworkCategory(val value: String) {
 
-    @SerializedName("becauseYouWatched")
-    BecauseYouWatched("becauseYouWatched"),
+    @SerializedName("Because You Watched")
+    BecauseYouWatched("Because You Watched"),
 
-    @SerializedName("trendingNow")
-    TrendingNow("trendingNow"),
+    @SerializedName("Trending Now")
+    TrendingNow("Trending Now"),
 
-    @SerializedName("popularOnNetflix")
-    PopularOnNetflix("popularOnNetflix"),
+    @SerializedName("Popular On Netflix")
+    PopularOnNetflix("Popular On Netflix"),
 
-    @SerializedName("newReleases")
-    NewReleases("newReleases"),
+    @SerializedName("New Releases")
+    NewReleases("New Releases"),
 
-    @SerializedName("documentaries")
-    Documentaries("documentaries"),
+    @SerializedName("Documentaries")
+    Documentaries("Documentaries"),
 
-    @SerializedName("casualViewing")
-    CasualViewing("casualViewing"),
+    @SerializedName("Casual Viewing")
+    CasualViewing("Casual Viewing"),
 
-    @SerializedName("movies")
-    Movies("movies"),
+    @SerializedName("Movies")
+    Movies("Movies"),
 
-    @SerializedName("tvShows")
-    TvShows("tvShows")
+    @SerializedName("TV Shows")
+    TvShows("TV Shows")
 
 
     //Continue Watching & Netflix Only will be calculated based on Movie properties.

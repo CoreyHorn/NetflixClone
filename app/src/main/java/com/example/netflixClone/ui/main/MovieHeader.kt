@@ -3,6 +3,7 @@ package com.example.netflixClone.ui.main
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
@@ -30,14 +31,14 @@ import com.example.netflixClone.data.local.database.Movie
 
 @Preview
 @Composable
-fun MovieHeader(movie: Movie? = fakeMovies.first()) {
+fun MovieHeader(movie: Movie? = fakeMovies.first(), onClick: (Movie) -> Unit = {}) {
     Box(modifier = Modifier.wrapContentHeight()) {
         movie?.let {
             AsyncImage(
                 model = movie.imageUrl,
                 contentDescription = movie.movieTitle,
                 contentScale = ContentScale.FillWidth,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().clickable { onClick(it) }
             )
         }
         // Contains the tags and buttons at the bottom of the movie image

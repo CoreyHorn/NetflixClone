@@ -44,9 +44,9 @@ class DefaultMovieRepository @Inject constructor(
         movieDao.getInProgress()
     ) { categories: List<CategoryWithMovies>, exclusives: List<Movie>, inProgress: List<Movie> ->
         val exclusiveCategory =
-            CategoryWithMovies(Category(categoryTitle = "isNetflixOnly"), exclusives)
+            CategoryWithMovies(Category(categoryTitle = "Only on Netflix"), exclusives)
         val inProgressCategory =
-            CategoryWithMovies(Category(categoryTitle = "inProgress"), inProgress)
+            CategoryWithMovies(Category(categoryTitle = "In Progress"), inProgress)
         emit(listOf(inProgressCategory, exclusiveCategory) + categories)
     }
 
