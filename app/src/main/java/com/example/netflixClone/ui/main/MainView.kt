@@ -40,7 +40,7 @@ fun MainView(
     ) {
         lifecycle.repeatOnLifecycle(state = Lifecycle.State.STARTED) {
             viewModel.state.collect {
-                Log.d("stuff3", it.toString())
+                Log.d("state", it.headerMovie.toString())
                 value = it
             }
         }

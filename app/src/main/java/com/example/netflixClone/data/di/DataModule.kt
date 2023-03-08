@@ -57,8 +57,8 @@ class FakeMovieRepository @Inject constructor() : MovieRepository {
         throw NotImplementedError()
     }
 
-//    override val headerMovie: Flow<Movie>
-//        get() = TODO("Not yet implemented")
+    override val headerMovie: Flow<Movie>
+        get() = TODO("Not yet implemented")
 }
 
 val fakeMovies = listOf(

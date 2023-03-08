@@ -83,6 +83,6 @@ interface MovieDao {
     fun getInProgress(): Flow<List<Movie>>
 
     //TODO: This should only be used with small datasets - query would need to be revised for production use.
-//    @Query("SELECT * FROM movie ORDER BY RANDOM() LIMIT 1")
-//    fun getRandomMovie(): Flow<Movie>
+    @Query("SELECT * FROM movie ORDER BY RANDOM() LIMIT 1")
+    fun getRandomMovie(): Flow<Movie>
 }

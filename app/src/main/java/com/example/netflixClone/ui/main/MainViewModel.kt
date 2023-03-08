@@ -6,10 +6,8 @@ import com.example.netflixClone.data.MovieRepository
 import com.example.netflixClone.data.local.database.CategoryWithMovies
 import com.example.netflixClone.data.local.database.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,21 +16,24 @@ class MainViewModel @Inject constructor(
     movieRepository: MovieRepository
 ) : ViewModel() {
 
+    private val dataDebounce = 200L
+
     /**
      * Convert back to use The repository
      */
     private val _state = MutableStateFlow<MainState>(MainState.Loading)
+    @OptIn(FlowPreview::class)
     val state = _state.asStateFlow().onStart {
         // Listen to header movie
         viewModelScope.launch {
-//            movieRepository.headerMovie.collect { movie ->
-//                _state.update { MainState.Success(it.categories, movie) }
-//            }
+            movieRepository.headerMovie.debounce(dataDebounce).collect { movie ->
+                _state.update { MainState.Success(it.categories, movie) }
+            }
         }
 
         // Listen to movies coming from Database
         viewModelScope.launch {
-            movieRepository.movies
+            movieRepository.movies.debounce(dataDebounce)
                 .collect { categories ->
                     _state.update {
                         MainState.Success(categories, it.headerMovie)
@@ -40,7 +41,7 @@ class MainViewModel @Inject constructor(
                 }
         }
 
-        // Request an update from the network - possible error
+        // Request movies from the network - possible error
         viewModelScope.launch {
             val fetchRequest = movieRepository.fetchMovies()
             if (!fetchRequest.isSuccessful)
