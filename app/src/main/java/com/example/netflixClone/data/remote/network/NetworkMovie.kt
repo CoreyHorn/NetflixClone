@@ -78,7 +78,6 @@ enum class NetworkCategory(val value: String) {
     @SerializedName("TV Shows")
     TvShows("TV Shows")
 
-
     //Continue Watching & Netflix Only will be calculated based on Movie properties.
 }
 

@@ -33,11 +33,6 @@ import javax.inject.Singleton
 class DatabaseModule {
 
     @Provides
-    fun provideLocalMovieDao(appDatabase: AppDatabase): MovieDao {
-        return appDatabase.localMovieDao()
-    }
-
-    @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase {
         return Room.databaseBuilder(
@@ -46,4 +41,10 @@ class DatabaseModule {
             "Movie"
         ).build()
     }
+
+    @Provides
+    fun provideMovieDao(appDatabase: AppDatabase): MovieDao {
+        return appDatabase.movieDao()
+    }
+
 }

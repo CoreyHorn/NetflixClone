@@ -12,6 +12,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
+import javax.inject.Singleton
 
 /**
  * Groups and provides APIs by their Base URL and (ideally) Serialization properties.
@@ -21,6 +22,7 @@ import javax.inject.Named
 class NetworkModule {
 
     @Provides
+    @Singleton
     fun provideRetrofit(): Retrofit {
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -33,11 +35,13 @@ class NetworkModule {
     }
 
     @Provides
+    @Singleton
     fun provideMovieService(retrofit: Retrofit): MovieApi {
         return retrofit.create(MovieApi::class.java)
     }
 
     @Provides
+    @Singleton
     @Named("FakeMovieService")
     fun provideFakeMovieService(): MovieApi {
         return FakeMovieService()

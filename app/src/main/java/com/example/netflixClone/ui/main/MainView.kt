@@ -1,7 +1,6 @@
 package com.example.netflixClone.ui.main
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,11 +32,9 @@ fun MainView(
     val header = viewModel.header.collectAsState(initial = null).value
     val state = viewModel.state.collectAsState(initial = MainState.Loading).value
 
-    Log.d("stuff", "state: $state, header: $header")
-
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    var currentlySelectedMovie by remember { mutableStateOf(fakeMovies.first()) }
+    var currentlySelectedMovie by remember { mutableStateOf(Movie("", "")) }
 
     val coroutineScope = rememberCoroutineScope()
 

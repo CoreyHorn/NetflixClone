@@ -26,19 +26,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.netflixClone.R
-import com.example.netflixClone.data.di.fakeMovies
 import com.example.netflixClone.data.local.database.Movie
 
 @Preview
 @Composable
-fun MovieHeader(movie: Movie? = fakeMovies.first(), onClick: (Movie) -> Unit = {}) {
+fun MovieHeader(movie: Movie? = Movie("", ""), onClick: (Movie) -> Unit = {}) {
     Box(modifier = Modifier.wrapContentHeight()) {
         movie?.let {
             AsyncImage(
                 model = movie.imageUrl,
                 contentDescription = movie.movieTitle,
                 contentScale = ContentScale.FillWidth,
-                modifier = Modifier.fillMaxWidth().clickable { onClick(it) }
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onClick(it) }
             )
         }
         // Contains the tags and buttons at the bottom of the movie image

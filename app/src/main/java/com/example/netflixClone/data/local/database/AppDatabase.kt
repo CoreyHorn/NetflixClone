@@ -21,5 +21,5 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [Movie::class, Category::class, MovieCategoryCrossRef::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun localMovieDao(): MovieDao
+    abstract fun movieDao(): MovieDao
 }

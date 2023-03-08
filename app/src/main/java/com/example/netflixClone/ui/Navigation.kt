@@ -29,7 +29,6 @@ fun MainNavigation(statusBarHeight: MutableState<Int>) {
 
     NavHost(navController = navController, startDestination = "main") {
         composable("main") { MainView(statusBarHeight = statusBarHeight) }
-//        composable("main") { MovieScreen() }
         // TODO: Add more destinations
     }
 }

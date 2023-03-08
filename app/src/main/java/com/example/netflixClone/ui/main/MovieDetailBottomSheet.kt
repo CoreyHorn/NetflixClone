@@ -18,12 +18,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.netflixClone.R
-import com.example.netflixClone.data.di.fakeMovies
 import com.example.netflixClone.data.local.database.Movie
 
 @Preview
 @Composable
-fun MovieDetailBottomSheet(movie: Movie = fakeMovies.first(), onClose: () -> Unit = {}) {
+fun MovieDetailBottomSheet(movie: Movie = Movie("", ""), onClose: () -> Unit = {}) {
     Surface(
         color = colorResource(id = R.color.bottom_sheet_background),
         modifier = Modifier.fillMaxWidth()

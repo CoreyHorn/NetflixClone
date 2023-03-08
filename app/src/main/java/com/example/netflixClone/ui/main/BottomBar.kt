@@ -61,7 +61,7 @@ fun BottomBarButton(
     tint: Color = Color.Gray,
     contentDescription: String = text
 ) {
-    Surface(color = Color.Transparent, modifier = Modifier.clickable {  })
+    Surface(color = Color.Transparent, modifier = Modifier.clickable { })
     {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(

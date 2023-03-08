@@ -9,17 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.netflixClone.data.di.fakeMovies
 import com.example.netflixClone.data.local.database.Movie
 
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun MovieCard(
-    movie: Movie = fakeMovies.first(),
+    movie: Movie,
     onMovieClick: (Movie) -> Unit = { },
     startPadding: Dp = 8.dp
 ) {
