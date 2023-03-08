@@ -29,7 +29,7 @@ fun BottomBar(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(top = 12.dp, bottom = 10.dp)
+                    .padding(top = 8.dp, bottom = 10.dp)
             ) {
                 ProvideTextStyle(value = TextStyle(fontSize = 8.sp, color = Color.Gray)) {
                     BottomBarButton(
@@ -68,6 +68,7 @@ fun BottomBarButton(
                 contentDescription = contentDescription,
                 tint = tint
             )
+            Spacer(modifier = Modifier.height(4.dp))
             Text(text = text, color = tint)
         }
     }

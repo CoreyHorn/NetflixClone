@@ -22,6 +22,7 @@ class MainViewModel @Inject constructor(
      * Convert back to use The repository
      */
     private val _state = MutableStateFlow<MainState>(MainState.Loading)
+
     @OptIn(FlowPreview::class)
     val state = _state.asStateFlow().onStart {
         // Listen to header movie
@@ -46,7 +47,11 @@ class MainViewModel @Inject constructor(
             val fetchRequest = movieRepository.fetchMovies()
             if (!fetchRequest.isSuccessful)
                 _state.update {
-                    MainState.Error(Throwable(fetchRequest.errorBody().toString()), it.categories, it.headerMovie)
+                    MainState.Error(
+                        Throwable(fetchRequest.errorBody().toString()),
+                        it.categories,
+                        it.headerMovie
+                    )
                 }
         }
     }

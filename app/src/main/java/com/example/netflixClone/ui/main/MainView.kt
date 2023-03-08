@@ -74,10 +74,12 @@ fun MainView(
                 coroutineScope.launch { transform() }
             }
         }
-    } else Column(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Black)
-        .padding(24.dp)) {
+    } else Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .padding(24.dp)
+    ) {
         Spacer(modifier = Modifier.height(48.dp))
         Text("Loading or Error") // TODO: Could create a good loading state or error handling
     }

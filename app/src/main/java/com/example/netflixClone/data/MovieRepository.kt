@@ -19,6 +19,7 @@ package com.example.netflixClone.data
 import com.example.netflixClone.data.local.database.*
 import com.example.netflixClone.data.remote.network.MovieApi
 import com.example.netflixClone.data.remote.network.NetworkMovie
+import com.example.netflixClone.data.remote.network.getMoviesWithoutCategory
 import com.example.netflixClone.data.remote.network.toCategoryMap
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
@@ -42,8 +43,10 @@ class DefaultMovieRepository @Inject constructor(
         movieDao.getNetflixExclusives(),
         movieDao.getInProgress()
     ) { categories: List<CategoryWithMovies>, exclusives: List<Movie>, inProgress: List<Movie> ->
-        val exclusiveCategory = CategoryWithMovies(Category(categoryTitle = "isNetflixOnly"), exclusives)
-        val inProgressCategory = CategoryWithMovies(Category(categoryTitle = "inProgress"), inProgress)
+        val exclusiveCategory =
+            CategoryWithMovies(Category(categoryTitle = "isNetflixOnly"), exclusives)
+        val inProgressCategory =
+            CategoryWithMovies(Category(categoryTitle = "inProgress"), inProgress)
         emit(listOf(inProgressCategory, exclusiveCategory) + categories)
     }
 
@@ -57,11 +60,10 @@ class DefaultMovieRepository @Inject constructor(
             coroutineScope {
                 if (movieDao.getCategoriesWithMovies().firstOrNull() != null) {
                     movieDao.insertCategoriesWithMovies(response.body()!!.toCategoryMap())
+                    movieDao.insertMovies(response.body()!!.getMoviesWithoutCategory())
                 }
             }
         }
-
-
 
         return response
     }

@@ -33,7 +33,7 @@ fun AppBar(topPadding: MutableState<Int> = mutableStateOf(107)) {
             Row(modifier = Modifier.height(48.dp)) {
                 Image(
                     painter = painterResource(id = R.drawable.netflix_icon),
-                    contentDescription = "Netflix", modifier = Modifier.size(48.dp)
+                    contentDescription = "Netflix", modifier = Modifier.size(54.dp)
                 )
 
                 // Contains action icons
@@ -62,7 +62,7 @@ fun AppBar(topPadding: MutableState<Int> = mutableStateOf(107)) {
                 horizontalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier
                     .height(48.dp)
-                    .padding(top = 4.dp)
+                    .padding(top = 8.dp)
                     .fillMaxWidth()
             ) {
                 Text(text = "TV Shows")

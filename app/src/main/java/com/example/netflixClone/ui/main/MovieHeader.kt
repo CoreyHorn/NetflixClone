@@ -44,8 +44,9 @@ fun MovieHeader(movie: Movie? = fakeMovies.first()) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Black)
+                .background(Color.Black.copy(alpha = .1f))
                 .align(Alignment.BottomCenter)
+                .padding(top = 12.dp)
         ) {
             HeaderTags()
             Row(
@@ -53,7 +54,7 @@ fun MovieHeader(movie: Movie? = fakeMovies.first()) {
                 horizontalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(12.dp)
+                    .padding(top = 8.dp, bottom = 24.dp, start = 12.dp, end = 12.dp)
             ) {
 
                 TextButton(
@@ -74,12 +75,14 @@ fun MovieHeader(movie: Movie? = fakeMovies.first()) {
 fun TextButton(@DrawableRes id: Int, text: String, contentDescription: String = text) {
     Button(
         onClick = {},
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
+        elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painterResource(id = id),
-                contentDescription = contentDescription
+                contentDescription = contentDescription,
+                modifier = Modifier.size(30.dp)
             )
 
             Text(text = text, color = Color.White, fontSize = 8.sp)
@@ -92,23 +95,21 @@ fun PlayButton() {
     Button(
         onClick = {},
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
-        contentPadding = PaddingValues(
-            start = 12.dp, end = 12.dp, top
-            = 0
-                .dp
-        )
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
+        modifier = Modifier.padding(top = 8.dp)
     ) {
         val play = stringResource(id = R.string.play)
         Image(
             painterResource(id = R.drawable.ic_baseline_play_arrow_24),
             contentDescription = play,
-            colorFilter = ColorFilter.tint(Color.Black)
+            colorFilter = ColorFilter.tint(Color.DarkGray),
+            modifier = Modifier.size(30.dp)
         )
         Text(
             text = play,
             fontSize = 14.sp,
             modifier = Modifier.padding(start = 4.dp),
-            color = Color.Black,
+            color = Color.DarkGray,
             fontWeight = FontWeight.ExtraBold
         )
     }
@@ -140,9 +141,9 @@ fun HeaderTags() {
 fun CircleSeparator() {
     Box(
         modifier = Modifier
-            .padding(8.dp)
-            .size(8.dp)
+            .padding(4.dp)
+            .size(4.dp)
             .clip(CircleShape)
-            .background(Color.Gray)
+            .background(Color.White)
     )
 }

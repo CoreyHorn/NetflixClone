@@ -17,7 +17,7 @@ fun List<NetworkMovie>.toCategoryMap(): Map<Category, List<Movie>> {
     // Go through movies
     // If category keys don't exist create them with current movie
     // else add current movie to category keys
-    this.forEach {  movie: NetworkMovie ->
+    this.forEach { movie: NetworkMovie ->
         val localMovie = movie.toLocalMovie()
         movie.categories.forEach {
             val localCategory = it.toLocalCategory()
@@ -30,6 +30,16 @@ fun List<NetworkMovie>.toCategoryMap(): Map<Category, List<Movie>> {
         }
     }
 
+    return result
+}
+
+fun List<NetworkMovie>.getMoviesWithoutCategory(): List<Movie> {
+    val result = mutableListOf<Movie>()
+    this.forEach {
+        if (it.categories.isEmpty()) {
+            result.add(it.toLocalMovie())
+        }
+    }
     return result
 }
 
