@@ -17,10 +17,7 @@
 package com.example.netflixClone.data
 
 import com.example.netflixClone.data.local.database.*
-import com.example.netflixClone.data.remote.network.MovieApi
-import com.example.netflixClone.data.remote.network.NetworkMovie
-import com.example.netflixClone.data.remote.network.getMoviesWithoutCategory
-import com.example.netflixClone.data.remote.network.toCategoryMap
+import com.example.netflixClone.data.remote.network.*
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
 import retrofit2.Response
@@ -58,9 +55,10 @@ class DefaultMovieRepository @Inject constructor(
         // Cache movies locally if none exist
         if (response.isSuccessful) {
             coroutineScope {
-                if (movieDao.getCategoriesWithMovies().firstOrNull() != null) {
-                    movieDao.insertCategoriesWithMovies(response.body()!!.toCategoryMap())
-                    movieDao.insertMovies(response.body()!!.getMoviesWithoutCategory())
+                if (movieDao.getCategoriesWithMovies().firstOrNull().isNullOrEmpty()) {
+                    response.body()!!.forEach { networkMovie ->
+                        movieDao.insertMovieWithCategories(networkMovie.toLocalMovie(), networkMovie.categories.map { it.toLocalCategory() })
+                    }
                 }
             }
         }
